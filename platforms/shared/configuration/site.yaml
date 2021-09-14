@@ -7,7 +7,7 @@
     no_log: "{{ no_ansible_log | default(false) }}"
   # - import_playbook: network-schema-validator.yaml  
   #   when: reset is undefined or reset == 'false'
-    when: validate is defined and validate == 'true'      
+    # when: validate is defined or validate == 'true'      
   - import_playbook: environment-setup.yaml   # First setup environment for each organization
   - import_playbook: kubernetes-env-setup.yaml # Then deploy Flux for each organization
     when: reset is undefined or reset == 'false'
