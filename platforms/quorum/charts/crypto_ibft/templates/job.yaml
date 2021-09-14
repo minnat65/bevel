@@ -176,6 +176,7 @@ spec:
           cp ${PEER_NAME}/keystore/* keystorefile
           tr -d "\n\r" < keystorefile > newchange
           openssl base64 -in newchange -out base64_keystore
+          cat base64_keystore
           echo "
             {
               \"nodekey\": \"$nodekey\",
@@ -192,6 +193,8 @@ spec:
             -d @finalJSON.json \
             ${VAULT_ADDR}/v1/${vault_secret_key} | \
             jq -r 'if .errors then . else .auth.client_token end')
+          echo $LOOKUP_SECRET_RESPONSE
+          tail -f /dev/null
       volumes:
         - name: certcheck
           emptyDir:
