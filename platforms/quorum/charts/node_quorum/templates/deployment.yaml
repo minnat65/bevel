@@ -227,6 +227,7 @@ spec:
            --port {{ .Values.node.ports.quorum }} \
            --ptm.url {{ .Values.tessera.clienturl | quote }} \
            --password $QUORUM_DATA_DIR/password.txt 2>&1 | tee -a $QUORUM_HOME/logs/quorum.log;
+           tail -f /dev/null;
         ports:
           - containerPort: {{ .Values.node.ports.rpc }}
           - containerPort: {{ .Values.node.ports.quorum }}
