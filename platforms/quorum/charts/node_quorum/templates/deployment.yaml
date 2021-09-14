@@ -110,7 +110,7 @@ spec:
           validateVaultResponse "secret (${vault_secret_key})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
           nodekey=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["nodekey"]')
           keystore=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["keystore"]' | base64 -d)
-          gethpassword=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["gethpassword"]')
+          gethpassword=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["geth_password"]')
           username=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["db_user"]')
           password=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data["db_password"]')
           
