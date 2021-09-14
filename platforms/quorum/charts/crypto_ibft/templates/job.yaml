@@ -193,8 +193,6 @@ spec:
             -d @finalJSON.json \
             ${VAULT_ADDR}/v1/${vault_secret_key} | \
             jq -r 'if .errors then . else .auth.client_token end')
-          echo $LOOKUP_SECRET_RESPONSE
-          tail -f /dev/null
       volumes:
         - name: certcheck
           emptyDir:
