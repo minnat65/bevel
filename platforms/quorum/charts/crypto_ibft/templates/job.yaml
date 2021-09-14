@@ -175,10 +175,11 @@ spec:
           geth account new --datadir ${PEER_NAME} --password password
           cp ${PEER_NAME}/keystore/* keystorefile
           tr -d "\n\r" < keystorefile > newchange
+          openssl base64 -in newchange -out base64_keystore
           echo "
             {
               \"nodekey\": \"$nodekey\",
-              \"keystore\": \"$(cat newchange)\",
+              \"keystore\": \"$(cat base64_keystore)\",
               \"db_password\": \"${DB_PASSWORD}\",
               \"geth_password\": \"${GETH_PASSPHRASE}\",
               \"db_user\": \"${DB_USER}\"
