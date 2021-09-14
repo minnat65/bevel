@@ -1,0 +1,79 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: manufacturermanufacturertessera
+  namespace: manufacturer-quo
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: manufacturermanufacturertessera
+  helmVersion: v3
+  chart:
+    git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
+    ref: develop
+    path: platforms/quorum/charts/node_tessera  
+  values:
+    replicaCount: 1
+    metadata:
+      namespace: manufacturer-quo
+      labels:
+    images:
+      node: quorumengineering/quorum:21.4.2
+      alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+      tessera: quorumengineering/tessera:21.4.0
+      busybox: busybox
+      mysql: mysql/mysql-server:5.7
+    node:
+      name: manufacturer
+      status: default
+      consensus: ibft
+      subject: O=Manufacturer,OU=Manufacturer,L=47.38/8.54/Zurich,C=CH
+      mountPath: /etc/quorum/qdata
+      imagePullSecret: regcred
+      keystore: keystore_1
+      
+      servicetype: ClusterIP
+      lock: false
+      ports:
+        rpc: 8546
+        raft: 50401
+        tm: 443
+        quorum: 21000
+        db: 3306
+      dbname: demodb
+      mysqluser: demouser
+    vault:
+      address: http://vault.internal.dev2.aws.blockchaincloudpoc-develop.com:20001
+      secretprefix: secret/manufacturer-quo/crypto/manufacturer
+      serviceaccountname: vault-auth
+      keyname: quorum
+      tm_keyname: transaction
+      role: vault-role
+      authpath: quorummanufacturer
+    tessera:
+      dburl: "jdbc:mysql://manufacturer-tessera:3306/demodb"
+      dbusername: demouser
+      url: "https://manufacturer.quo.dev2.aws.blockchaincloudpoc-develop.com:443"
+      clienturl: "http://manufacturer-tessera:8888" #TODO: Enable tls strict for q2t
+      othernodes:
+        - url: https://carrier.quo.dev2.aws.blockchaincloudpoc-develop.com
+        - url: https://manufacturer.quo.dev2.aws.blockchaincloudpoc-develop.com
+      tls: "STRICT"
+      trust: "TOFU"
+    genesis: ewogICJjb25maWciOiB7CiAgICAiY2hhaW5JZCI6IDEwLAogICAgImhvbWVzdGVhZEJsb2NrIjogMCwKICAgICJlaXAxNTBCbG9jayI6IDAsCiAgICAiZWlwMTUwSGFzaCI6ICIweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAiLAogICAgImVpcDE1NUJsb2NrIjogMCwKICAgICJlaXAxNThCbG9jayI6IDAsCiAgICAiYnl6YW50aXVtQmxvY2siOiAwLAogICAgImNvbnN0YW50aW5vcGxlQmxvY2siOiAwLAogICAgImlzdGFuYnVsIjogewogICAgICAiZXBvY2giOiAzMDAwMCwKICAgICAgInBvbGljeSI6IDAsCiAgICAgICJjZWlsMk5ieTNCbG9jayI6IDAKICAgIH0sCiAgICAidHhuU2l6ZUxpbWl0IjogMTI4LAogICAgImlzUXVvcnVtIjogdHJ1ZSwKICAgICJwZXRlcnNidXJnQmxvY2siOiAwLAogICAgImlzdGFuYnVsQmxvY2siOiAwLAogICAgIm1heENvZGVTaXplQ29uZmlnIjogWwogICAgICB7CiAgICAgICAgImJsb2NrIjogMCwKICAgICAgICAic2l6ZSI6IDEyOAogICAgICB9CiAgICBdCiAgfSwKICAibm9uY2UiOiAiMHgwIiwKICAidGltZXN0YW1wIjogIjB4NjE0MGM0MjUiLAogICJleHRyYURhdGEiOiAiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwZjg2ZmVhOTRhZjAwZmVmYzdhN2M0OTI0YmNkMTBiMGJiMzg1YjQ2ZTBmMGRjMTg0OTQxOTk3MDEzZjM1Y2E2NjhmODFhNTZjOGRjYWMxMmViM2M4MDcxYTkxYjg0MTAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDBjMCIsCiAgImdhc0xpbWl0IjogIjB4ZTAwMDAwMDAiLAogICJkaWZmaWN1bHR5IjogIjB4MSIsCiAgIm1peEhhc2giOiAiMHg2Mzc0Njk2MzYxNmMyMDYyNzk3YTYxNmU3NDY5NmU2NTIwNjY2MTc1NmM3NDIwNzQ2ZjZjNjU3MjYxNmU2MzY1IiwKICAiY29pbmJhc2UiOiAiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIiwKICAiYWxsb2MiOiB7CiAgICAiMTk5NzAxM2YzNWNhNjY4ZjgxYTU2YzhkY2FjMTJlYjNjODA3MWE5MSI6IHsKICAgICAgImJhbGFuY2UiOiAiMHg0NDZjM2IxNWY5OTI2Njg3ZDJjNDA1MzRmZGI1NjQwMDAwMDAwMDAwMDAiCiAgICB9LAogICAgImFmMDBmZWZjN2E3YzQ5MjRiY2QxMGIwYmIzODViNDZlMGYwZGMxODQiOiB7CiAgICAgICJiYWxhbmNlIjogIjB4NDQ2YzNiMTVmOTkyNjY4N2QyYzQwNTM0ZmRiNTY0MDAwMDAwMDAwMDAwIgogICAgfQogIH0sCiAgIm51bWJlciI6ICIweDAiLAogICJnYXNVc2VkIjogIjB4MCIsCiAgInBhcmVudEhhc2giOiAiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIgp9
+    staticnodes: 
+      [
+    "enode://040f68d7fc95f349c6ee098651e2e53066997fa45511b73b4a04013d35f78a0688cc28316604c7b2d4c7252a65678a88b963dc305ba9eed79d7066bec519e191@carrier.quo.dev2.aws.blockchaincloudpoc-develop.com:15051?discport=0",
+    "enode://19fa93b3fb22316d5bbe5947ef676262cb61f4fde3b63f708e5f38ac9468bca57f20686e71fec3dc6ad07ea5ee66f3da664a393ec88fe8d3bb23cc3d6c744e7e@manufacturer.quo.dev2.aws.blockchaincloudpoc-develop.com:15055?discport=0"
+]
+    proxy:
+      provider: "ambassador"
+      external_url: manufacturer.quo.dev2.aws.blockchaincloudpoc-develop.com
+      portTM: 443
+      rpcport: 15056
+      quorumport: 15055
+      clientport: 8888
+    storage:
+      storageclassname: awsstorageclass
+      storagesize: 1Gi
+      dbstorage: 1Gi
