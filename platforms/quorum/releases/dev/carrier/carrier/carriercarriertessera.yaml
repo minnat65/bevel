@@ -1,0 +1,80 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: carriercarriertessera
+  namespace: carrier-quo
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: carriercarriertessera
+  helmVersion: v3
+  chart:
+    git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
+    ref: workspace
+    path: platforms/quorum/charts/node_tessera  
+  values:
+    replicaCount: 1
+    metadata:
+      namespace: carrier-quo
+      labels:
+    images:
+      node: quorumengineering/quorum:21.4.2
+      alpineutils: index.docker.io/hyperledgerlabs/alpine-utils:1.0
+      tessera: quorumengineering/tessera:21.4.1
+      busybox: busybox
+      mysql: mysql/mysql-server:5.7
+    node:
+      name: carrier
+      status: default
+      consensus: raft
+      subject: O=Carrier,OU=Carrier,L=51.50/-0.13/London,C=GB
+      mountPath: /etc/quorum/qdata
+      imagePullSecret: regcred
+      keystore: keystore_1
+      
+      servicetype: ClusterIP
+      lock: false
+      ports:
+        rpc: 8546
+        raft: 50401
+        tm: 443
+        quorum: 21000
+        db: 3306
+      dbname: demodb
+      mysqluser: demouser
+    vault:
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      secretprefix: secretsv2/data/carrier-quo/crypto/carrier
+      serviceaccountname: vault-auth
+      keyname: quorum
+      tm_keyname: transaction
+      role: vault-role
+      authpath: quorumcarrier
+    tessera:
+      dburl: "jdbc:mysql://carrier-tessera:3306/demodb"
+      dbusername: demouser
+      url: "https://carrier.quo.demo.aws.blockchaincloudpoc.com:443"
+      clienturl: "http://carrier-tessera:8888" #TODO: Enable tls strict for q2t
+      othernodes:
+        - url: https://carrier.quo.demo.aws.blockchaincloudpoc.com
+      tls: "STRICT"
+      trust: "TOFU"
+    genesis: ewogICAgImFsbG9jIjogewogICAgICAgICIxMWZhZDMxNWUzNDIxNGEyMzJjNzA1MTA0NWI2ZjFiNzI5NGJlZWYxIjogewogICAgICAgICAgICAiYmFsYW5jZSI6ICIxMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIgogICAgICAgIH0sCiAgICAgICAgImQ5MzY0MDhkZmQ5OTkwZjkxZWI5MjFiM2Q2MWY1ZDZhZmNmMGVlODEiOiB7CiAgICAgICAgICAgICJiYWxhbmNlIjogIjEwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAiCiAgICAgICAgfQogICAgfSwKICAgICJjb2luYmFzZSI6ICIweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAiLAogICAgImNvbmZpZyI6IHsKICAgICAgICAiYnl6YW50aXVtQmxvY2siOiAwLAogICAgICAgICJjaGFpbklkIjogMTAsCiAgICAgICAgImNvbnN0YW50aW5vcGxlQmxvY2siOiAwLAogICAgICAgICJlaXAxNTBCbG9jayI6IDAsCiAgICAgICAgImVpcDE1MEhhc2giOiAiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIiwKICAgICAgICAiZWlwMTU1QmxvY2siOiAwLAogICAgICAgICJlaXAxNThCbG9jayI6IDAsCiAgICAgICAgImhvbWVzdGVhZEJsb2NrIjogMCwKICAgICAgICAiaXNRdW9ydW0iOiB0cnVlLAogICAgICAgICJwZXRlcnNidXJnQmxvY2siOiAwLAogICAgICAgICJyYWZ0U2Vjb25kcyI6IHRydWUsCiAgICAgICAgInR4blNpemVMaW1pdCI6IDEyOAogICAgfSwKICAgICJkaWZmaWN1bHR5IjogIjB4MCIsCiAgICAiZXh0cmFEYXRhIjogIjB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIsCiAgICAiZ2FzTGltaXQiOiAiMHhFMDAwMDAwMDAwIiwKICAgICJtaXhoYXNoIjogIjB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA2NDc1NzI2MTZjNjU3ODczNjU2NDZjNjU3OCIsCiAgICAibm9uY2UiOiAiMHgwIiwKICAgICJwYXJlbnRIYXNoIjogIjB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIsCiAgICAidGltZXN0YW1wIjogIjB4MDAiCn0=
+    staticnodes: 
+      [
+    "enode://572c4c086f370bc10199140a4973ca7ac48066dd3ed8ac7657bd660b7dbd419af47035275e24fa2b66f40f0da7f222c6bc87bdb2119e6a23200c6fbd158b410d@carrier.quo.demo.aws.blockchaincloudpoc.com:15011?discport=0&raftport=15013",
+    "enode://17d66fe1b5556f67fc8eeaac9b671442aadef57c475eb3bee81b3dd462e13d90033fa60d891ab8ae28c9d9d543fcc537e09e5aa140b96377509bcbb502f68ba6@store.quo.demo.aws.blockchaincloudpoc.com:15017?discport=0&raftport=15019"
+]
+    proxy:
+      provider: "ambassador"
+      external_url: carrier.quo.demo.aws.blockchaincloudpoc.com
+      portTM: 443
+      rpcport: 15012
+      quorumport: 15011
+      clientport: 8888
+  
+      portRaft: 15013
+    storage:
+      storageclassname: awsstorageclass
+      storagesize: 1Gi
+      dbstorage: 1Gi
