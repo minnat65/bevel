@@ -1,0 +1,26 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: store-tessera-job
+  namespace: store-quo
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: store-tessera-job
+  chart:
+    path: platforms/quorum/charts/tessera_key_mgmt
+    git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
+    ref: workspace
+  values:
+    metadata:
+      name: store-tessera-job
+      namespace: store-quo    
+    image:      
+      repository: quorumengineering/tessera:21.4.1
+      pullSecret: regcred
+    vault:
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: quorumstore
+      role: vault-role
+      serviceaccountname: vault-auth
+      tmprefix: secretsv2/data/store-quo/crypto/store/transaction
