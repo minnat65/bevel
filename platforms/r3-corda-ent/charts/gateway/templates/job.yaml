@@ -79,6 +79,15 @@ spec:
             mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/setupAuth.sh
             subPath: setupAuth.sh
           - name: gateway-conf
+            mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/g/ca-signers.json
+            subPath: ca-signers.json
+          - name: gateway-conf
+            mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/g/configuration-maintainers.json
+            subPath: configuration-maintainers.json
+          - name: gateway-conf
+            mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/g/configuration-readers.json
+            subPath: configuration-readers.json
+          - name: gateway-conf
             mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/g/network-maintainers.json
             subPath: network-maintainers.json
           - name: gateway-conf
@@ -87,6 +96,19 @@ spec:
           - name: gateway-conf
             mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/g/network-operators.json
             subPath: network-operators.json
+          - name: gateway-conf
+            mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/g/nonca-signers.json
+            subPath: nonca-signers.json
+          - name: gateway-conf
+            mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/r/CASigner.json
+            subPath: CASigner.json
+          - name: gateway-conf
+            mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/r/ConfigurationMaintainer.json
+            subPath: ConfigurationMaintainer.json
+          - name: gateway-conf
+            mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/r/ConfigurationReader.json
+            subPath: ConfigurationReader.json
+          - name: gateway-conf
             mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/r/NetworkMaintainer.json
             subPath: NetworkMaintainer.json
           - name: gateway-conf
@@ -96,14 +118,29 @@ spec:
             mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/r/NetworkOperator.json
             subPath: NetworkOperator.json
           - name: gateway-conf
+            mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/r/NonCASigner.json
+            subPath: NonCASigner.json
+          - name: gateway-conf
             mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/u/business-reader.json
             subPath: business-reader.json
+          - name: gateway-conf
+            mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/u/ca-signer.json
+            subPath: ca-signer.json
+          - name: gateway-conf
+            mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/u/config-maintainer.json
+            subPath: config-maintainer.json
+          - name: gateway-conf
+            mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/u/config-reader.json
+            subPath: config-reader.json
           - name: gateway-conf
             mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/u/network-maintainer.json
             subPath: network-maintainer.json
           - name: gateway-conf
             mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/u/network-operator.json
             subPath: network-operator.json
+          - name: gateway-conf
+            mountPath: {{ .Values.config.volume.baseDir }}/CM-FILES/u/nonca-signer.json
+            subPath: nonca-signer.json
       restartPolicy: OnFailure
       volumes:
         - name: gateway-conf

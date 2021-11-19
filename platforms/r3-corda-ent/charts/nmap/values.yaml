@@ -15,6 +15,8 @@
 # Provide the name of the node
 # e.g. `networkmap`
 nodeName:
+bashDebug: true
+prefix: cenm
 
 # This section contains the Corda Enterprise nmap metadata.
 metadata:
@@ -44,6 +46,9 @@ image:
   imagePullSecret:
   # When to pull the image, e.g. `Always`
   pullPolicy:
+  dockerImageCli:
+    name: corda/enterprise-cli:1.5.1-zulu-openjdk8u242
+    pullPolicy: Always
 
 # required parameter
 acceptLicense: YES
@@ -100,6 +105,10 @@ service:
     user:
     # Password for ssh session, e.g. `password`
     password:
+  adminListener:
+    port: 6000
+  authService:
+    port: 8081
 
 serviceLocations:
   # Values for the Identity Manager (idman)

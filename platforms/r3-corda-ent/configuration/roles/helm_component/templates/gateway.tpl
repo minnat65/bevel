@@ -12,7 +12,7 @@ spec:
     ref: {{ org.gitops.branch }}
     path: {{ charts_dir }}/gateway
   values:
-    nodeName: {{ component_name }}}
+    nodeName: {{ component_name }}
     metadata:
       namespace: {{ component_ns }}
       labels:

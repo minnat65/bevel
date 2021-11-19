@@ -14,6 +14,9 @@
 # Provide the name of the node
 # Eg. nodeName: idman
 nodeName:
+# Debug mode 
+bashDebug: false
+prefix: cenm
 
 # This section contains the Corda Enterprise Idman metadata.
 metadata:
@@ -37,7 +40,10 @@ image:
   imagePullSecret: 
   # Pull policy to be used for the Docker image
   # Eg. pullPolicy: Always
-  pullPolicy: 
+  pullPolicy:
+  dockerImageCli:
+    name: corda/enterprise-cli:1.5.1-zulu-openjdk8u242
+    pullPolicy: Always
   
 # This section contains the storage information, used for the Persistent Volume Claims (PVC).
 storage:
@@ -112,6 +118,10 @@ service:
     # SSH password
     # Eg. password:"idmanP
     password:
+  adminListener:
+    port: 6000
+  authService:
+    port: 8081
 
 #############################################################
 #                Database Options and Configuration         #

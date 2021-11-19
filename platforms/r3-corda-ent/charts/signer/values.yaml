@@ -81,10 +81,13 @@ vault:
 
 # Provide the service details for setting up ssh
 service:
+  # Eg. type: ClusterIP
+  type:
+  adminListener:
+    port: 6000
+  authService:
+    port: 8081
   ssh:
-    # The type of the SSH service (among such ClusterIP, NodePort)
-    # Eg. type: ClusterIP
-    type:
     # The port where the SSH service is running inside the cluster
     # Eg. port: 2222
     port:

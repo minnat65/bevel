@@ -157,6 +157,7 @@ spec:
                mkdir -p ${MOUNT_PATH}
                mkdir -p ${MOUNT_PATH}/signer;
                mkdir -p ${MOUNT_PATH}/root;
+               mkdir -p ${MOUNT_PATH}/idman;
                
                # signer-files from vault
                LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/{{ $.Values.nodeName }}/certs | jq -r 'if .errors then . else . end')
@@ -169,6 +170,12 @@ spec:
 
                corda_ssl_signer=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["corda-ssl-signer-keys.jks"]')
                echo "${corda_ssl_signer}" | base64 -d > ${MOUNT_PATH}/signer/corda-ssl-signer-keys.jks
+
+               # idman ssl key-stores from vault
+               LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/idman/certs | jq -r 'if .errors then . else . end')
+               idm_ssl=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["corda-ssl-identity-manager-keys.jks"]')
+               echo "${idm_ssl}" | base64 -d > ${MOUNT_PATH}/idman/corda-ssl-identity-manager-keys.jks
+               echo "Successfully got SSL Idman certifcates"
                
                # ssl trust-stores from vault
                LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/${CERTS_SECRET_PREFIX}/root/certs | jq -r 'if .errors then . else . end')
@@ -210,6 +217,9 @@ spec:
                SIGNER_SSL=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["signer"]')
                echo "${SIGNER_SSL}"> ${OUTPUT_PATH}/signerssl
 
+               IDMAN_SSL=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["idman"]')
+               echo "${IDMAN_SSL}"> ${OUTPUT_PATH}/idmanssl
+
                echo "Done"
           volumeMounts:
           - name: certificates
@@ -224,13 +234,7 @@ spec:
         command: ["/bin/bash", "-c"]
         args:
         - |-
-          echo 'shell = {
-              sshdPort = {{ .Values.service.ssh.port }}
-              user = "{{ .Values.service.shell.user }}"
-              password = "{{ .Values.service.shell.password }}"
-          }
-
-          signingKeys = {
+          echo 'signingKeys = {
               "cordaidentitymanagerca" = {
                   alias = "identitymanagerca"
                   type = LOCAL
@@ -358,9 +362,36 @@ spec:
                     }
                   ]
               }
+          }
+          authServiceConfig = {
+              disableAuthentication=false
+              host="auth.{{ .Values.metadata.namespace }}"
+              port={{ .Values.service.authService.port }}
+              trustStore = {
+                  location = "./DATA/root/corda-ssl-trust-store.jks"
+                  password = SSL_TRUSTSTORE
+              }
+              issuer="http://test"
+              leeway=5s
+          }
+
+          adminListener = {
+              port = {{ .Values.service.adminListener.port }}
+              ssl = {
+                  keyStore = {
+                      location = ./DATA/idman/corda-ssl-identity-manager-keys.jks
+                      password = IDMAN_SSL
+                  }
+                  trustStore = {
+                      location = ./DATA/root/corda-ssl-trust-store.jks
+                      password = SSL_TRUSTSTORE
+                  }
+              }
           }' >> {{ .Values.config.configPath }}/signer.conf
 
           #replacement of the variables
+          export IDMAN_SSL=$(cat {{ .Values.config.volume.baseDir }}/DATA/credentials/ssl/idmanssl)
+          sed -i -e "s*IDMAN_SSL*${IDMAN_SSL}*g" etc/signer.conf
           export IDMAN_KEYSTORE=$(cat {{ .Values.config.volume.baseDir }}/DATA/credentials/keystore/idmanks)
           sed -i -e "s*IDMAN_KEYSTORE*${IDMAN_KEYSTORE}*g" {{ .Values.config.configPath }}/signer.conf
           export NETWORKMAP_KEYSTORE=$(cat {{ .Values.config.volume.baseDir }}/DATA/credentials/keystore/networkmapks)
