@@ -19,7 +19,7 @@ spec:
     prefix: {{ org.name }}
     image:
       initContainerName: {{ network.docker.url }}/{{ init_image }}
-      gatewayContainerName: {{ network.docker.url }}/{{ docker_image }}
+      gatewayContainerName: {{ docker_image }}
       imagePullSecrets: 
         - name: "regcred"
       pullPolicy: IfNotPresent

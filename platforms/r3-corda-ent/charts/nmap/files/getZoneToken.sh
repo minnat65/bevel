@@ -27,7 +27,7 @@ then
     done
     cat ./notary-nodeinfo/network-parameters-initial.conf
     ZONE_TOKEN=$(java -jar bin/cenm-tool.jar zone create-subzone \
-        --config-file={{ .Values.config.configPath }}/nmap.conf --network-map-address=nmap.{{ .Values.metadata.namespace }}:{{ .Values.service.adminListener.port }} \
+        --config-file={{ .Values.config.configPath }}/nmap.conf --network-map-address={{ .Values.nodeName }}.{{ .Values.metadata.namespace }}:{{ .Values.service.adminListener.port }} \
         --network-parameters=./notary-nodeinfo/network-parameters-initial.conf --label=Main --label-color='#941213' --zone-token)
     echo ${ZONE_TOKEN}
     echo ${ZONE_TOKEN} > {{ .Values.config.configPath }}/token
