@@ -1,0 +1,38 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: carrier-vaultkubenertes-job
+  namespace: carrier-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: carrier-vaultkubenertes-job
+  chart:
+    git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
+    ref: develop
+    path: platforms/hyperledger-fabric/charts/vault_kubernetes
+  values:
+    metadata:
+      name: carrier
+      component_name: carrier-net
+      component_type: peer
+      namespace: carrier-net    
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.2
+        alpineutils: adopblockchaincloud0502.azurecr.io/alpine-utils:1.0
+
+    checks:
+      vault_auth_status_exits: False
+      vault_policy_not_exits: True
+
+    vault:
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: demo-fabriccarrier-net-auth
+      policy: vault-crypto-peer-carrier-net-ro
+      secret_path: secretsv2
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+    
+    k8s:
+      kubernetes_url: https://34D2F36E71F0880BE63D943D2E503A9B.gr7.eu-west-1.eks.amazonaws.com
