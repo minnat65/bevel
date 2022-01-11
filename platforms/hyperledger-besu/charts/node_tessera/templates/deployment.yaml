@@ -231,11 +231,11 @@ spec:
             value: {{ $.Values.vault.address }}
         args:
           - |-
+            apk update && apk add jq curl
             mkdir -p $TESSERA_HOME/logs;
             mkdir -p $TESSERA_HOME/tm;
             DDIR=$TESSERA_HOME/tm;
             PASSWORD=$(cat $TESSERA_HOME/crypto/keys/password);
-
             validateVaultResponse () {
               if echo ${2} | grep "errors"; then
                 echo "ERROR: unable to retrieve ${1}: ${2}"
