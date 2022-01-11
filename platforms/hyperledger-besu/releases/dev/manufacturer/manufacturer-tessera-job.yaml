@@ -1,0 +1,30 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: manufacturer-tessera-job
+  namespace: manufacturer-bes
+  annotations:
+    flux.weave.works/automated: "false"
+spec:
+  releaseName: manufacturer-tessera-job
+  chart:
+    path: platforms/hyperledger-besu/charts/tessera_key_mgmt
+    git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
+    ref: workspace
+  values:
+    metadata:
+      name: manufacturer-tessera-job
+      namespace: manufacturer-bes
+    peer:
+      name: manufacturer        
+    image:      
+      repository: quorumengineering/tessera:hashicorp-21.7.3
+      pullSecret: regcred
+    vault:
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      secretengine: secretsv2
+      authpath: besumanufacturer
+      role: vault-role
+      keyprefix: manufacturer-bes/crypto
+      serviceaccountname: vault-auth
+      tmprefix: secretsv2/data/manufacturer-bes/crypto
