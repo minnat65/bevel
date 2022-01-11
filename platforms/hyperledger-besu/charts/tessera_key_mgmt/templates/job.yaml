@@ -82,7 +82,7 @@ spec:
                 -d '{"role":"'"${VAULT_APP_ROLE}"'","jwt":"'"${KUBE_SA_TOKEN}"'"}' | \
                 jq -r 'if .errors then . else .auth.client_token end')
               validateVaultResponse 'vault login token' "${VAULT_CLIENT_TOKEN}"
-              vault_secret_key="${VAULT_SECRET_PREFIX}"
+              
               # Generate tessera keys
               export HASHICORP_TOKEN=${VAULT_CLIENT_TOKEN}
               /tessera/bin/tessera -keygen -keygenvaulttype HASHICORP -keygenvaulturl ${VAULT_ADDR} -keygenvaultsecretengine ${VAULT_SECRET_ENGINE} -filename ${VAULT_KEY_PREFIX}/${PEER_NAME}/tm
