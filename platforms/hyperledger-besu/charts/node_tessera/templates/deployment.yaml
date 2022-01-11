@@ -226,9 +226,6 @@ spec:
       - name: tessera
         image: {{ .Values.images.tessera }}
         command: ["sh", "-c"]
-        env:
-          - name: VAULT_ADDR
-            value: {{ $.Values.vault.address }}
         args:
           - |-
             apk update && apk add jq curl
@@ -283,6 +280,8 @@ spec:
             value: {{ .Values.tessera.mountPath }}
           - name: QHOME
             value: {{ .Values.tessera.mountPath }}
+          - name: VAULT_ADDR
+            value: {{ $.Values.vault.address }}
         volumeMounts:
           - name: certificates
             mountPath: {{ .Values.tessera.mountPath }}/crypto/
