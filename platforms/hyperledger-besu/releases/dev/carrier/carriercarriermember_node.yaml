@@ -6,7 +6,7 @@ metadata:
   annotations:
     flux.weave.works/automated: "false"
 spec:
-  releaseName: carriercarriermember_node
+  releaseName: cmember_node
   helmVersion: v3
   chart:
     git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
