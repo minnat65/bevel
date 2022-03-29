@@ -1,0 +1,33 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: manufacturer-vaultk8s-job
+  namespace: manufacturer-bes
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: manufacturer-vaultk8s-job
+  chart:
+    git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
+    ref: develop
+    path: platforms/shared/charts/vault-k8s-mgmt
+  values:
+    metadata:
+      name: manufacturer-vaultk8s-job
+      namespace: manufacturer-bes    
+      images:
+        alpineutils: hyperledgerlabs/alpine-utils:1.0
+
+    vault:
+      reviewer_service: vault-reviewer
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: besumanufacturer
+      policy: vault-crypto-organization-manufacturer-ro
+      policydata: "{\n  \"policy\": \"path \\\"secretsv2/data/manufacturer-bes/crypto/*\\\" {\n    capabilities = [\\\"read\\\", \\\"list\\\", \\\"create\\\", \\\"update\\\"]\n  }\n  path \\\"secretsv2/data/manufacturer-bes/smartContracts/*\\\" {\n    capabilities = [\\\"read\\\", \\\"list\\\"]\n  }\"\n}"
+      secret_path: secretsv2
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+    
+    k8s:
+      kubernetes_url: https://34D2F36E71F0880BE63D943D2E503A9B.gr7.eu-west-1.eks.amazonaws.com
