@@ -1,12 +1,12 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: manufacturermanufacturermember_node
+  name: manufacturermanufacturermember-node
   namespace: manufacturer-bes
   annotations:
     flux.weave.works/automated: "false"
 spec:
-  releaseName: manufacturermanufacturermember_node
+  releaseName: manufacturermanufacturermember-node
   chart:
     git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
     ref: develop
