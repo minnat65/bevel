@@ -14,5 +14,6 @@ spec:
     path: platforms/hyperledger-besu/charts/node_besu
   values:
     metadata:
+      replicaCount: 1
       namespace: default
       labels:
