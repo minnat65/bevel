@@ -232,3 +232,6 @@ spec:
             - name: policies-config-peer
               mountPath: /policies/policies-config-peer.json.tmpl
               subPath: policies-config-peer.json.tmpl
+            - name: policies-config-mixed
+              mountPath: /policies/policies-config-mixed.json.tmpl
+              subPath: policies-config-mixed.json.tmpl
