@@ -1,11 +1,7 @@
   - &{{ component_name }}Org
     Name: {{ component_name }}MSP
-    ID: {{ component_name }}MSP
-{% if component_type == 'mixed' %}   
+    ID: {{ component_name }}MSP  
     MSPDir: ./crypto-config/ordererOrganizations/{{ component_ns }}/msp
-{% else %}
-    MSPDir: ./crypto-config/{{ component_type }}Organizations/{{ component_ns }}/msp
-{% endif %}
     Policies:
       Readers:
         Type: Signature
