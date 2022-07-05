@@ -87,6 +87,13 @@ spec:
           name: peer-script-store-vault-{{ $.Values.metadata.component_type }}
           defaultMode: 0775
           items:
+            - key: store-vault-peer.sh
+              path: store-vault-peer.sh
+      - name: none-config
+        configMap:
+          name: msp-config-file
+          defaultMode: 0775
+          items:
             - key: none-config.yaml
               path: none-config.yaml
       - name: no-none-config
