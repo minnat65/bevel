@@ -40,10 +40,10 @@ spec:
       volumes:
       - name: ca-tools-pv
         persistentVolumeClaim:
-          claimName: ca-tools-pvc
+          claimName: ca-tools-pvc-{{ .Values.metadata.component_type }}
       - name: ca-tools-crypto-pv
         persistentVolumeClaim:
-          claimName: ca-tools-crypto-pvc
+          claimName: ca-tools-crypto-pvc-{{ .Values.metadata.component_type }}
       - name: certcheck
         emptyDir:
           medium: Memory
