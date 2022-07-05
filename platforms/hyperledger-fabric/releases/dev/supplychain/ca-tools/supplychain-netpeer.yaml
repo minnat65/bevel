@@ -14,7 +14,7 @@ spec:
   values:
     metadata:
       namespace: supplychain-net
-      name: supplychain-net-peer-ca-tools
+      name: peer-ca-tools
       component_type: peer
       org_name: supplychain
       proxy: haproxy
@@ -63,3 +63,17 @@ spec:
 
     orderers:
       name: orderer1-orderer2-orderer3-
+    orderers_info:
+      - name: orderer1
+        path: "certs/orderer1-ca.crt"
+      - name: orderer2
+        path: "certs/orderer2-ca.crt"
+      - name: orderer3
+        path: "certs/orderer3-ca.crt"
+
+    peers:
+      name: peer0,-      
+    peer_count: "1"
+    checks:
+      refresh_cert_value: False
+      add_peer_value: False
