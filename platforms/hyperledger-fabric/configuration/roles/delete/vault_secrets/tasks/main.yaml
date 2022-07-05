@@ -101,6 +101,15 @@
     VAULT_TOKEN: "{{ item.vault.root_token }}"
   when: component_type == 'orderer'
 
+  # This task deletes crypto materials from vault
+- name: Delete Crypto for mixed
+  shell: |
+    vault kv delete {{ item.vault.secret_path | default('secretsv2') }}/crypto/mixedOrganizations/{{ component_name }}/ca
+  environment:
+    VAULT_ADDR: "{{ item.vault.url }}"
+    VAULT_TOKEN: "{{ item.vault.root_token }}"
+  when: component_type == 'mixed'
+
 ############################################################################################
 # This task deletes crypto materials from vault
 - name: Delete Crypto for peers

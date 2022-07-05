@@ -1,12 +1,12 @@
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
-  name: {{ component_name }}-ca-tools
+  name: {{ component_name }}-{{ component_type }}-ca-tools
   namespace: {{ component_name }}
   annotations:
     fluxcd.io/automated: "false"
 spec:
-  releaseName: {{ component_name }}-ca-tools
+  releaseName: {{ component_name }}-{{ component_type }}-ca-tools
   chart:
     git: {{ git_url }}
     ref: {{ git_branch }}
@@ -18,7 +18,7 @@ spec:
   values:
     metadata:
       namespace: {{ component_name }}
-      name: ca-tools
+      name: {{ component_type }}-ca-tools
       component_type: {{ component_type }}
       org_name: {{ org_name }}
       proxy: {{ proxy }}

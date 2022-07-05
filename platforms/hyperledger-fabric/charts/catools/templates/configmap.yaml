@@ -8,7 +8,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: crypto-scripts-cm
+  name: crypto-scripts-cm-{{ .Values.metadata.component_type }}
   namespace: {{ .Values.metadata.namespace }}
   labels:
     app.kubernetes.io/name: crypto-scripts
@@ -382,7 +382,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: orderer-script-store-vault
+  name: orderer-script-store-vault-{{ .Values.metadata.component_type }}
   namespace: {{ .Values.metadata.namespace }}
   labels:
     app.kubernetes.io/name: orderer-script-vault
@@ -820,7 +820,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: peer-script-store-vault
+  name: peer-script-store-vault-{{ .Values.metadata.component_type }}
   namespace: {{ .Values.metadata.namespace }}
   labels:
     app.kubernetes.io/name: peer-script-vault
@@ -1415,7 +1415,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: msp-config-file
+  name: msp-config-file-{{ .Values.metadata.component_type }}
   namespace: {{ .Values.metadata.namespace }}
   labels:
     app.kubernetes.io/name: msp-config-file
@@ -1457,7 +1457,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: tls-cert
+  name: tls-cert-{{ .Values.metadata.component_type }}
   namespace: {{ .Values.metadata.namespace }}
   labels:
     app.kubernetes.io/name: tls-cert

@@ -49,56 +49,56 @@ spec:
           medium: Memory
       - name: generate-crypto
         configMap:
-          name: crypto-scripts-cm
+          name: crypto-scripts-cm-{{ .Values.metadata.component_type }}
           defaultMode: 0775
           items:
             - key: generate-crypto-orderer.sh
               path: generate-crypto-orderer.sh
       - name: generate-orderer-crypto
         configMap:
-          name: crypto-scripts-cm
+          name: crypto-scripts-cm-{{ .Values.metadata.component_type }}
           defaultMode: 0775
           items:
             - key: orderer-script.sh
               path: orderer-script.sh
       - name: generate-crypto-peer
         configMap:
-          name: crypto-scripts-cm
+          name: crypto-scripts-cm-{{ .Values.metadata.component_type }}
           defaultMode: 0775
           items:
             - key: generate-crypto-peer.sh
               path: generate-crypto-peer.sh
       - name: generate-crypto-add-peer
         configMap:
-          name: crypto-scripts-cm
+          name: crypto-scripts-cm-{{ .Values.metadata.component_type }}
           defaultMode: 0775
           items:
             - key: generate-crypto-add-peer.sh
               path: generate-crypto-add-peer.sh
       - name: store-vault-orderer
         configMap:
-          name: orderer-script-store-vault
+          name: orderer-script-store-vault-{{ .Values.metadata.component_type }}
           defaultMode: 0775
           items:
             - key: store-vault-orderer.sh
               path: store-vault-orderer.sh
       - name: store-vault-peer
         configMap:
-          name: peer-script-store-vault
+          name: peer-script-store-vault-{{ .Values.metadata.component_type }}
           defaultMode: 0775
           items:
             - key: store-vault-peer.sh
               path: store-vault-peer.sh
       - name: none-config
         configMap:
-          name: msp-config-file
+          name: msp-config-file-{{ .Values.metadata.component_type }}
           defaultMode: 0775
           items:
             - key: none-config.yaml
               path: none-config.yaml
       - name: no-none-config
         configMap:
-          name: msp-config-file
+          name: msp-config-file-{{ .Values.metadata.component_type }}
           defaultMode: 0775
           items:
             - key: no-none-config.yaml
@@ -107,7 +107,7 @@ spec:
       {{- range $orderers := $.Values.orderers_info }}
       - name: {{ $orderers.name }}-tls-cert
         configMap:
-          name: tls-cert
+          name: tls-cert-{{ .Values.metadata.component_type }}
           defaultMode: 0775
           items:
             - key: {{ $orderers.name }}.crt

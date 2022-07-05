@@ -34,8 +34,8 @@
   loop: "{{ orderers }}"
   loop_control:
     loop_var: orderer
-  when: component_type == 'orderer'
 
+# Needs Check for orderer
 ############################################################################################
 # This task creates the generate-crypto-{{ component_name }}.sh file for orderer organizations
 - name: Create generate_crypto script file for orderer organisation
@@ -51,14 +51,14 @@
     component_location: "{{ item.location }}"
     ca_url: "{{ item.ca_data.url }}"
     proxy: "{{ network.env.proxy }}"
-  when: component_type == 'orderer'
 
+# Needs Check for orderer
 ############################################################################################
 # This task creates the generate_crypto.sh file for organizations
 - name: Create generate_crypto script file for organisations
   template:
     src: "organisation_script.tpl"
-    dest: "./build/generate-crypto-{{ component_name }}.sh"
+    dest: "./build/generate-crypto-{{ component_name }}-peer.sh"
   vars:
     component_name: "{{ item.name | lower }}"
     component_ns: "{{ item.name | lower }}-net"
@@ -69,4 +69,4 @@
     ca_url: "{{ item.ca_data.url }}"
     peer_count: "{{ item.services.peers | length }}"
     proxy: "{{ network.env.proxy }}"
-  when: component_type == 'peer'
+  when: item.services.peers | length > 0

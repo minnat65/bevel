@@ -99,15 +99,14 @@
       vars:
         component_name: "{{ item.name | lower}}-net"
         component: "{{ item.name | lower}}"
-        component_type: "{{ item.type | lower}}"
+        component_type: "orderer"
         component_services: "{{ item.services }}"
         kubernetes: "{{ item.k8s }}"
         vault: "{{ item.vault }}"
         ca: "{{ item.services.ca }}"
         gitops: "{{ item.gitops }}"
-        values_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
+        values_dir: "{{ playbook_dir }}/../../../{{ item.gitops.release_dir}}/{{ item.name | lower }}"
       loop: "{{ network['organizations'] }}"
-      when: item.type == 'orderer'
     
     # Create CA Tools helm-value files and check-in
     - name: Create CA tools for each organization
@@ -116,7 +115,7 @@
       vars:
         component_name: "{{ item.name | lower}}-net"
         component: "{{ item.name | lower}}"
-        component_type: "{{ item.type | lower}}"
+        component_type: "peer"
         component_services: "{{ item.services }}"
         kubernetes: "{{ item.k8s }}"
         vault: "{{ item.vault }}"
@@ -124,7 +123,6 @@
         gitops: "{{ item.gitops }}"
         values_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
       loop: "{{ network['organizations'] }}"
-      when: item.type == 'peer'
 
     # Creating channel artifacts and putting them in vault
     # This role creates configtx.yaml file as the requirements mentioned in network.yaml

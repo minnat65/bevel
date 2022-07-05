@@ -134,7 +134,7 @@
     name: "ca-tools"
     type: "ca-tools"
     org_name: "{{ item.name | lower }}"
-    component_type: "{{ item.type | lower }}"
+    component_type: "peer"
     vault: "{{ item.vault }}"
     external_url_suffix: "{{ item.external_url_suffix }}"
     component_subject: "{{ item.subject }}"
