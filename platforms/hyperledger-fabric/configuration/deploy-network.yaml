@@ -19,110 +19,110 @@
   no_log: "{{ no_ansible_log | default(false) }}"
   tasks:
   
-    # delete build directory
-    - name: Remove build directory
-      file:
-        path: "./build"
-        state: absent
+    # # delete build directory
+    # - name: Remove build directory
+    #   file:
+    #     path: "./build"
+    #     state: absent
 
-    # Create Namespaces and Vault-rbac kubernetes-value files
-    - name: Create namespace and Vault auth for each organization
-      include_role:
-        name: "create/namespace_vaultauth"
-      vars:
-        component_name: "{{ item.name | lower }}-net"
-        component_type_name: "{{ item.type | lower }}"
-        kubernetes: "{{ item.k8s }}"
-        release_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
-      loop: "{{ network['organizations'] }}"
+    # # Create Namespaces and Vault-rbac kubernetes-value files
+    # - name: Create namespace and Vault auth for each organization
+    #   include_role:
+    #     name: "create/namespace_vaultauth"
+    #   vars:
+    #     component_name: "{{ item.name | lower }}-net"
+    #     component_type_name: "{{ item.type | lower }}"
+    #     kubernetes: "{{ item.k8s }}"
+    #     release_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
+    #   loop: "{{ network['organizations'] }}"
     
-    #Setup Vault-Kubernetes accesses and Regcred for docker registry
-    - name: Setup Vault Kubernetes for each organization
-      include_role: 
-        name: "setup/vault_kubernetes"
-      vars:
-        component_name: "{{ item.name | lower }}-net"
-        kubernetes: "{{ item.k8s }}"
-        vault: "{{ item.vault }}"
-        component_type: "{{ item.type | lower }}"
-        auth_path: "{{ network.env.type }}{{ item.name | lower }}-net-auth"
-      loop: "{{ network['organizations'] }}"
+    # #Setup Vault-Kubernetes accesses and Regcred for docker registry
+    # - name: Setup Vault Kubernetes for each organization
+    #   include_role: 
+    #     name: "setup/vault_kubernetes"
+    #   vars:
+    #     component_name: "{{ item.name | lower }}-net"
+    #     kubernetes: "{{ item.k8s }}"
+    #     vault: "{{ item.vault }}"
+    #     component_type: "{{ item.type | lower }}"
+    #     auth_path: "{{ network.env.type }}{{ item.name | lower }}-net-auth"
+    #   loop: "{{ network['organizations'] }}"
 
-    # Create Storageclass 
-    - name: Create storageclass for each organization
-      include_role:
-        name: "create/storageclass"
-      vars:
-        sc_name: "{{ item.name | lower}}sc"
-        component_type: "{{ item.type | lower}}"
-        kubernetes: "{{ item.k8s }}"
-        release_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
-      loop: "{{ network['organizations'] }}"
+    # # Create Storageclass 
+    # - name: Create storageclass for each organization
+    #   include_role:
+    #     name: "create/storageclass"
+    #   vars:
+    #     sc_name: "{{ item.name | lower}}sc"
+    #     component_type: "{{ item.type | lower}}"
+    #     kubernetes: "{{ item.k8s }}"
+    #     release_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
+    #   loop: "{{ network['organizations'] }}"
         
-    # Create CA Server helm-value files and check-in
-    - name: Create CA server for each organization
-      include_role:
-        name: "create/ca-server"
-      vars:
-        component_name: "{{ item.name | lower}}-net"
-        component: "{{ item.name | lower}}"
-        component_type: "{{ item.type | lower}}"
-        component_services: "{{ item.services }}"
-        kubernetes: "{{ item.k8s }}"
-        vault: "{{ item.vault }}"
-        ca: "{{ item.services.ca }}"
-        docker_url: "{{ network.docker.url }}"
-        gitops: "{{ item.gitops }}"
-        values_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
-      loop: "{{ network['organizations'] }}"
-      when: item.services.ca is defined
+    # # Create CA Server helm-value files and check-in
+    # - name: Create CA server for each organization
+    #   include_role:
+    #     name: "create/ca-server"
+    #   vars:
+    #     component_name: "{{ item.name | lower}}-net"
+    #     component: "{{ item.name | lower}}"
+    #     component_type: "{{ item.type | lower}}"
+    #     component_services: "{{ item.services }}"
+    #     kubernetes: "{{ item.k8s }}"
+    #     vault: "{{ item.vault }}"
+    #     ca: "{{ item.services.ca }}"
+    #     docker_url: "{{ network.docker.url }}"
+    #     gitops: "{{ item.gitops }}"
+    #     values_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
+    #   loop: "{{ network['organizations'] }}"
+    #   when: item.services.ca is defined
         
-    # Create generate_crypto script for each organization
-    - name: Create generate_crypto.sh for each organization
-      include_role:
-        name: "create/crypto_script"
-      vars:
-        component_type: "{{ item.type | lower}}"        
-        orderers: "{{ item.services.orderers }}"
-      loop: "{{ network['organizations'] }}"
+    # # Create generate_crypto script for each organization
+    # - name: Create generate_crypto.sh for each organization
+    #   include_role:
+    #     name: "create/crypto_script"
+    #   vars:
+    #     component_type: "{{ item.type | lower}}"        
+    #     orderers: "{{ item.services.orderers }}"
+    #   loop: "{{ network['organizations'] }}"
 
-    #Creating a pause so that the client certificates are valid
-    # You can continue if the CA-server pods are running for more than 5 minutes
-    - pause:
-        prompt: "Sleeping... so that the client certificates are valid"
-        minutes: 6
+    # #Creating a pause so that the client certificates are valid
+    # # You can continue if the CA-server pods are running for more than 5 minutes
+    # - pause:
+    #     prompt: "Sleeping... so that the client certificates are valid"
+    #     minutes: 6
     
-     # Create CA Tools helm-value files and check-in
-    - name: Create CA tools for each organization
-      include_role:
-        name: "create/ca-tools/orderer"
-      vars:
-        component_name: "{{ item.name | lower}}-net"
-        component: "{{ item.name | lower}}"
-        component_type: "orderer"
-        component_services: "{{ item.services }}"
-        kubernetes: "{{ item.k8s }}"
-        vault: "{{ item.vault }}"
-        ca: "{{ item.services.ca }}"
-        gitops: "{{ item.gitops }}"
-        values_dir: "{{ playbook_dir }}/../../../{{ item.gitops.release_dir}}/{{ item.name | lower }}"
-      loop: "{{ network['organizations'] }}"
+    #  # Create CA Tools helm-value files and check-in
+    # - name: Create CA tools for each organization
+    #   include_role:
+    #     name: "create/ca-tools/orderer"
+    #   vars:
+    #     component_name: "{{ item.name | lower}}-net"
+    #     component: "{{ item.name | lower}}"
+    #     component_type: "orderer"
+    #     component_services: "{{ item.services }}"
+    #     kubernetes: "{{ item.k8s }}"
+    #     vault: "{{ item.vault }}"
+    #     ca: "{{ item.services.ca }}"
+    #     gitops: "{{ item.gitops }}"
+    #     values_dir: "{{ playbook_dir }}/../../../{{ item.gitops.release_dir}}/{{ item.name | lower }}"
+    #   loop: "{{ network['organizations'] }}"
     
-    # Create CA Tools helm-value files and check-in
-    - name: Create CA tools for each organization
-      include_role:
-        name: "create/ca-tools/peer"
-      vars:
-        component_name: "{{ item.name | lower}}-net"
-        component: "{{ item.name | lower}}"
-        component_type: "peer"
-        component_services: "{{ item.services }}"
-        kubernetes: "{{ item.k8s }}"
-        vault: "{{ item.vault }}"
-        ca: "{{ item.services.ca }}"
-        gitops: "{{ item.gitops }}"
-        values_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
-      loop: "{{ network['organizations'] }}"
+    # # Create CA Tools helm-value files and check-in
+    # - name: Create CA tools for each organization
+    #   include_role:
+    #     name: "create/ca-tools/peer"
+    #   vars:
+    #     component_name: "{{ item.name | lower}}-net"
+    #     component: "{{ item.name | lower}}"
+    #     component_type: "peer"
+    #     component_services: "{{ item.services }}"
+    #     kubernetes: "{{ item.k8s }}"
+    #     vault: "{{ item.vault }}"
+    #     ca: "{{ item.services.ca }}"
+    #     gitops: "{{ item.gitops }}"
+    #     values_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
+    #   loop: "{{ network['organizations'] }}"
 
     # Creating channel artifacts and putting them in vault
     # This role creates configtx.yaml file as the requirements mentioned in network.yaml
@@ -159,7 +159,7 @@
       vars:
         build_path: "./build"
         namespace: "{{ item.name | lower}}-net"
-        component_type: "{{ item.type | lower}}"
+        component_type: "orderer"
         component_services: "{{ item.services }}"
         vault: "{{ item.vault }}"
         git_protocol: "{{ item.gitops.git_protocol }}"
@@ -169,72 +169,72 @@
         charts_dir: "{{ item.gitops.chart_source }}"
         values_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
       loop: "{{ network['organizations'] }}"
-      when: item.type == 'orderer'
+      when: item.services.orderers is defined and item.services.orderers | length > 0
 
-    # This role creates the value file for peers of organisations and write couch db credentials
-    # to the vault.
-    - name: Create all peers
-      include_role:
-        name: "create/peers"
-      vars:
-        build_path: "./build"
-        namespace: "{{ item.name | lower}}-net"
-        component_type: "{{ item.type | lower}}"
-        component_services: "{{ item.services }}"
-        vault: "{{ item.vault }}"
-        git_protocol: "{{ item.gitops.git_protocol }}"
-        git_url: "{{ item.gitops.git_url }}"
-        git_branch: "{{ item.gitops.branch }}"
-        docker_url: "{{ network.docker.url }}"
-        charts_dir: "{{ item.gitops.chart_source }}"
-        values_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
-      loop: "{{ network['organizations'] }}"
-      when: item.type == 'peer'
+    # # This role creates the value file for peers of organisations and write couch db credentials
+    # # to the vault.
+    # - name: Create all peers
+    #   include_role:
+    #     name: "create/peers"
+    #   vars:
+    #     build_path: "./build"
+    #     namespace: "{{ item.name | lower}}-net"
+    #     component_type: "{{ item.type | lower}}"
+    #     component_services: "{{ item.services }}"
+    #     vault: "{{ item.vault }}"
+    #     git_protocol: "{{ item.gitops.git_protocol }}"
+    #     git_url: "{{ item.gitops.git_url }}"
+    #     git_branch: "{{ item.gitops.branch }}"
+    #     docker_url: "{{ network.docker.url }}"
+    #     charts_dir: "{{ item.gitops.chart_source }}"
+    #     values_dir: "{{playbook_dir}}/../../../{{item.gitops.release_dir}}/{{ item.name | lower }}"
+    #   loop: "{{ network['organizations'] }}"
+    #   when: item.type == 'peer'
 
-    # This role creates the value file for creating channel from creator organization
-    # to the vault.
-    - name: Create all create-channel jobs
-      include_role:
-        name: "create/channels"
-      vars:
-        build_path: "./build"
-        participants: "{{ item.participants }}"
-        docker_url: "{{ network.docker.url }}"
-      loop: "{{ network['channels'] }}"
+    # # This role creates the value file for creating channel from creator organization
+    # # to the vault.
+    # - name: Create all create-channel jobs
+    #   include_role:
+    #     name: "create/channels"
+    #   vars:
+    #     build_path: "./build"
+    #     participants: "{{ item.participants }}"
+    #     docker_url: "{{ network.docker.url }}"
+    #   loop: "{{ network['channels'] }}"
 
-    # This role creates the value file for joining channel from each participating peer
-    # to the vault.
-    - name: Create all join-channel jobs
-      include_role:
-        name: "create/channels_join"
-      vars:
-        build_path: "./build"
-        participants: "{{ item.participants }}"
-        docker_url: "{{ network.docker.url }}"
-      loop: "{{ network['channels'] }}"
+    # # This role creates the value file for joining channel from each participating peer
+    # # to the vault.
+    # - name: Create all join-channel jobs
+    #   include_role:
+    #     name: "create/channels_join"
+    #   vars:
+    #     build_path: "./build"
+    #     participants: "{{ item.participants }}"
+    #     docker_url: "{{ network.docker.url }}"
+    #   loop: "{{ network['channels'] }}"
 
-    # This role creates the value file for anchor peer update over channel for
-    # each organization which is the part of the channel.
-    - name: Create all anchor-peer jobs
-      include_role:
-        name: "create/anchorpeer"
-      vars:
-        build_path: "./build"
-        participants: "{{ item.participants }}"
-        docker_url: "{{ network.docker.url }}"
-      loop: "{{ network['channels'] }}"
+    # # This role creates the value file for anchor peer update over channel for
+    # # each organization which is the part of the channel.
+    # - name: Create all anchor-peer jobs
+    #   include_role:
+    #     name: "create/anchorpeer"
+    #   vars:
+    #     build_path: "./build"
+    #     participants: "{{ item.participants }}"
+    #     docker_url: "{{ network.docker.url }}"
+    #   loop: "{{ network['channels'] }}"
 
-    # Create CLI pod for peers with cli option enabled
-    - name: Create CLI pod for each peer with it enabled
-      include_role:
-        name: "create/cli_pod"
-      vars:
-        peers: "{{ org.services.peers }}"
-        docker_url: "{{ network.docker.url }}"
-      loop: "{{ network.organizations }}"
-      loop_control:
-        loop_var: org
-      when: org.type == "peer" and org.org_status == "new"
+    # # Create CLI pod for peers with cli option enabled
+    # - name: Create CLI pod for each peer with it enabled
+    #   include_role:
+    #     name: "create/cli_pod"
+    #   vars:
+    #     peers: "{{ org.services.peers }}"
+    #     docker_url: "{{ network.docker.url }}"
+    #   loop: "{{ network.organizations }}"
+    #   loop_control:
+    #     loop_var: org
+    #   when: org.type == "peer" and org.org_status == "new"
 
   vars: #These variables can be overriden from the command line
     privilege_escalate: false           #Default to NOT escalate to root privledges

@@ -1,7 +1,11 @@
   - &{{ component_name }}Org
     Name: {{ component_name }}MSP
     ID: {{ component_name }}MSP
+{% if component_type == 'mixed' %}   
+    MSPDir: ./crypto-config/ordererOrganizations/{{ component_ns }}/msp
+{% else %}
     MSPDir: ./crypto-config/{{ component_type }}Organizations/{{ component_ns }}/msp
+{% endif %}
     Policies:
       Readers:
         Type: Signature
@@ -15,7 +19,7 @@
       Endorsement:
         Type: Signature
         Rule: "OR('{{ component_name }}MSP.member')"
-    {% if component_type == 'peer' %}      
+{% if component_type == 'peer' or component_type == 'mixed' %}      
     AnchorPeers:
       # AnchorPeers defines the location of peers which can be used
       # for cross org gossip communication.  Note, this value is only
