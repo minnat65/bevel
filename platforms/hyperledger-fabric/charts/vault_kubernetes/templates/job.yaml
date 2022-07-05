@@ -184,7 +184,7 @@ spec:
                   curl \
                   --header "X-Vault-Token: $ROOT_TOKEN" \
                   --request POST \
-                  --data @${POLICIES_PATH}/policies-config-admin.json.tmpl \
+                  --data @${POLICIES_PATH}/policies-config-mixed.json.tmpl \
                   ${VAULT_ADDR}/v1/sys/policy/${POLICY_NAME}
 
                 fi;
