@@ -196,7 +196,7 @@ spec:
 
                 validateVaultResponse ${response_status};
               fi;
-
+              echo $vault_auth_check
               if [ "$vault_auth_check" == 'null' ]; then
                 echo "Need vault auth role"
 
