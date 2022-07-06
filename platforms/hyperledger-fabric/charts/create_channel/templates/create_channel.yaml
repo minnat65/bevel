@@ -199,8 +199,8 @@ spec:
         volumeMounts:
         - name: certificates
           mountPath: /opt/gopath/src/github.com/hyperledger/fabric/crypto
-          readOnly: true
+          readOnly: false
         - name: channel-artifacts-{{ $.Values.channel.name }}
           mountPath: /opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
-          readOnly: true
+          readOnly: false
 
