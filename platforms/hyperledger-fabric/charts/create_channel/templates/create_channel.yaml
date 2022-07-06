@@ -158,6 +158,7 @@ spec:
           cat ./channel-artifacts/channel.tx.base64 | base64 -d > channel.tx
           echo "Fetch block to see if channel has already been created..."
           tls_status=${CORE_PEER_TLS_ENABLED}
+          tail -f /dev/null
           if [ "$tls_status" = "true" ]
           then
             peer channel fetch 0 -c ${CHANNEL_NAME} --tls --cafile ${ORDERER_CA} -o ${ORDERER_URL} /tmp/${CHANNEL_NAME}.block
@@ -171,7 +172,6 @@ spec:
           else
             echo "Creating Channel ${CHANNEL_NAME}"
             version1_4=`echo $NETWORK_VERSION | grep -c 1.4`
-            tail -f /dev/null
             if [ "$tls_status" = "true" ]
             then
               if [ $version1_4 = 1 ]
