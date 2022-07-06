@@ -99,7 +99,7 @@
   environment:
     VAULT_ADDR: "{{ item.vault.url }}"
     VAULT_TOKEN: "{{ item.vault.root_token }}"
-  when: component_type == 'orderer'
+  when: component_type == 'mixed'
 
   # This task deletes crypto materials from vault
 - name: Delete Crypto for mixed
@@ -136,7 +136,7 @@
   environment:
     VAULT_ADDR: "{{ item.vault.url }}"
     VAULT_TOKEN: "{{ item.vault.root_token }}"
-  when: component_type == 'peer'
+  when: component_type == 'mixed'
 
 - name: Remove all endorsers
   args:
@@ -169,7 +169,7 @@
   environment:
     VAULT_ADDR: "{{ item.vault.url }}"
     VAULT_TOKEN: "{{ item.vault.root_token }}"
-  when: component_type == 'peer' and item.users is defined
+  when: component_type == 'mixed' and item.users is defined
 
 - name: Delete policy
   shell: |

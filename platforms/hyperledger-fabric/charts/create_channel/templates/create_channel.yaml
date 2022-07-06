@@ -171,6 +171,7 @@ spec:
           else
             echo "Creating Channel ${CHANNEL_NAME}"
             version1_4=`echo $NETWORK_VERSION | grep -c 1.4`
+            tail -f /dev/null
             if [ "$tls_status" = "true" ]
             then
               if [ $version1_4 = 1 ]

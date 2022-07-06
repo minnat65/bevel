@@ -35,4 +35,4 @@
   loop: "{{ network['organizations'] }}"
   loop_control:
     loop_var: org
-  when: add_new_org == 'false' and org.type == "orderer"
+  when: add_new_org == 'false' and org.services.orderers is defined
