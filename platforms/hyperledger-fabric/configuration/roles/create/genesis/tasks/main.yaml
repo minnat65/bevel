@@ -15,7 +15,7 @@
   shell: |
     cd {{ build_path }}
     {% if '2.' in network.version %}
-    ./configtxgen -profile {{ genesis.name }} -channelID syschannel  -outputBlock ./channel-artifacts/genesis.block
+    ./configtxgen -profile {{ genesis.name }} -channelID syschannel -outputBlock ./channel-artifacts/genesis.block
     {% else %}
     ./configtxgen -profile {{ genesis.name }} -channelID syschannel -outputBlock ./channel-artifacts/genesis.block
     {% endif %}

@@ -2,7 +2,7 @@
     Name: {{ component_name }}MSP
     ID: {{ component_name }}MSP  
     MSPDir: ./crypto-config/peerOrganizations/{{ component_ns }}/msp
-    Policies:
+    Policies: &{{ component_name }}Policies
       Readers:
         Type: Signature
         Rule: "OR('{{ component_name }}MSP.member')"
@@ -15,6 +15,10 @@
       Endorsement:
         Type: Signature
         Rule: "OR('{{ component_name }}MSP.member')"
+    OrdererEndpoints:
+{% for orderer in  item.services.orderers %}
+      - "{{ orderer.name }}.{{ item.external_url_suffix }}:8443"
+{% endfor %}
 {% if component_type == 'peer' or component_type == 'mixed' %}      
     AnchorPeers:
       # AnchorPeers defines the location of peers which can be used

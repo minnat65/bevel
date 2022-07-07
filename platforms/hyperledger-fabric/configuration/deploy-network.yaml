@@ -127,11 +127,11 @@
     # Creating channel artifacts and putting them in vault
     # This role creates configtx.yaml file as the requirements mentioned in network.yaml
     # which is then consumed by configtxgen tool
-    - name: Create configtx.yaml
-      include_role:
-        name: "create/configtx"
-      vars:
-        config_file: "./build/configtx.yaml"
+    # - name: Create configtx.yaml
+    #   include_role:
+    #     name: "create/configtx"
+    #   vars:
+    #     config_file: "./build/configtx.yaml"
 
     # This role generate genesis block and channeltx
     - name: Create channel artifacts for all channels
