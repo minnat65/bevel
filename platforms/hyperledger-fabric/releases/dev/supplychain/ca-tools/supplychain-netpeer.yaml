@@ -1,0 +1,79 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: supplychain-net-peer-ca-tools
+  namespace: supplychain-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: supplychain-net-peer-ca-tools
+  chart:
+    git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
+    ref: workspace
+    path: platforms/hyperledger-fabric/charts/catools
+  values:
+    metadata:
+      namespace: supplychain-net
+      name: peer-ca-tools
+      component_type: peer
+      org_name: supplychain
+      proxy: haproxy
+    replicaCount: 1
+
+    image:
+      repository: hyperledger/fabric-ca-tools
+      tag: 1.2.1
+      pullPolicy: IfNotPresent
+      alpineutils: adopblockchaincloud0502.azurecr.io/alpine-utils:1.0
+      
+    storage:
+      storageclassname: supplychainsc
+      storagesize: 512Mi
+    
+    vault:
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: demo-fabricsupplychain-net-auth
+      secretmsp: secretsv2/data/crypto/peerOrganizations/supplychain-net/users/admin/msp
+      secrettls: secretsv2/data/crypto/peerOrganizations/supplychain-net/users/admin/tls
+      secretorderer: secretsv2/data/crypto/peerOrganizations/supplychain-net/orderers
+      secretpeer: secretsv2/data/crypto/peerOrganizations/supplychain-net/peers
+      secretpeerorderertls: secretsv2/data/crypto/peerOrganizations/supplychain-net/orderer/tls
+      secretambassador: secretsv2/data/crypto/peerOrganizations/supplychain-net/ambassador
+      secretcert: secretsv2/data/crypto/peerOrganizations/supplychain-net/ca?ca.supplychain-net-cert.pem
+      secretkey: secretsv2/data/crypto/peerOrganizations/supplychain-net/ca?supplychain-net-CA.key
+      secretcouchdb: secretsv2/data/credentials/supplychain-net/couchdb/supplychain
+      secretconfigfile: secretsv2/data/crypto/peerOrganizations/supplychain-net/msp/config
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+    
+    healthcheck: 
+      retries: 10
+      sleepTimeAfterError: 2
+
+    
+    org_data:
+      external_url_suffix: hf.demo.aws.blockchaincloudpoc.com
+      component_subject: O=Orderer,OU=Orderer,L=51.50/-0.13/London,C=GB
+      cert_subject: O=Orderer/OU=Orderer/L=51.50,-0.13,London/C=GB
+      component_country: UK
+      component_state: London
+      component_location: London
+      ca_url: ca.supplychain-net.hf.demo.aws.blockchaincloudpoc.com:8443
+
+    orderers:
+      name: orderer1-orderer2-orderer3-
+    orderers_info:
+      - name: orderer1
+        path: "certs/orderer1-ca.crt"
+      - name: orderer2
+        path: "certs/orderer2-ca.crt"
+      - name: orderer3
+        path: "certs/orderer3-ca.crt"
+
+    peers:
+      name: peer0,-      
+    peer_count: "1"
+    checks:
+      refresh_cert_value: False
+      add_peer_value: False
