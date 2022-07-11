@@ -430,7 +430,6 @@ spec:
           command: ["sh", "-c"]
           args:
             - |-
-              tail -f /dev/null
               if [ "$COMPONENT_TYPE" = "orderer" ]; then
 
                 if [ -e  ${MOUNT_PATH}/absent_msp.txt ]; then
@@ -487,7 +486,8 @@ spec:
                     fi;
 
                     # Generate crypto material for organization peers
-                    cd /root/ca-tools/${NAME} 
+                    cd /root/ca-tools/${NAME}
+                    tail -f /dev/null
                     if [ "$ADD_PEER" = "false" ]; then
                       ./generate-crypto-peer.sh    
                       break
