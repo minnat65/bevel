@@ -36,6 +36,8 @@ spec:
       authpath: demo-fabricsupplychain-net-auth
       secretmsp: secretsv2/data/crypto/peerOrganizations/supplychain-net/users/admin/msp
       secrettls: secretsv2/data/crypto/peerOrganizations/supplychain-net/users/admin/tls
+      secretmsp_orderer: secretsv2/data/crypto/ordererOrganizations/supplychain-net/users/admin/msp
+      secrettls_orderer: secretsv2/data/crypto/ordererOrganizations/supplychain-net/users/admin/tls
       secretorderer: secretsv2/data/crypto/peerOrganizations/supplychain-net/orderers
       secretpeer: secretsv2/data/crypto/peerOrganizations/supplychain-net/peers
       secretpeerorderertls: secretsv2/data/crypto/peerOrganizations/supplychain-net/orderer/tls
