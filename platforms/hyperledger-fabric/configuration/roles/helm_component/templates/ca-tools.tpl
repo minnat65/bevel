@@ -61,6 +61,8 @@ spec:
       authpath: {{ network.env.type }}{{ component_name }}-auth
       secretmsp: {{ vault.secret_path | default('secret') }}/data/crypto/{{ component_type }}Organizations/{{ component_name }}/users/admin/msp
       secrettls: {{ vault.secret_path | default('secret') }}/data/crypto/{{ component_type }}Organizations/{{ component_name }}/users/admin/tls
+      secretmsp_orderer: {{ vault.secret_path | default('secret') }}/data/crypto/ordererOrganizations/{{ component_name }}/users/admin/msp
+      secrettls_orderer: {{ vault.secret_path | default('secret') }}/data/crypto/ordererOrganizations/{{ component_name }}/users/admin/tls
       secretorderer: {{ vault.secret_path | default('secret') }}/data/crypto/{{ component_type }}Organizations/{{ component_name }}/orderers
       secretpeer: {{ vault.secret_path | default('secretsv2') }}/data/crypto/{{ component_type }}Organizations/{{ component_name }}/peers
       secretpeerorderertls: {{ vault.secret_path | default('secret') }}/data/crypto/{{ component_type }}Organizations/{{ component_name }}/orderer/tls

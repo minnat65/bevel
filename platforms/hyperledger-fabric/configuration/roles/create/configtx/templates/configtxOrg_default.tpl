@@ -1,7 +1,7 @@
   - &{{ component_name }}Org
     Name: {{ component_name }}MSP
     ID: {{ component_name }}MSP  
-    MSPDir: ./crypto-config/peerOrganizations/{{ component_ns }}/msp
+    MSPDir: ./crypto-config/ordererOrganizations/{{ component_ns }}/msp
     Policies: &{{ component_name }}Policies
       Readers:
         Type: Signature
