@@ -225,12 +225,16 @@ data:
 
     KEYSTORE=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["keystore"]')
     SIGNCERTS=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["signcerts"]')
+    CACERTS=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["cacerts"]')
+    TLSCACERTS=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["tlscacerts"]')
 
     mkdir -p ${ORG_HOME}/admin/msp/signcerts/
     mkdir -p ${ORG_HOME}/admin/msp/keystore/
+    mkdir -p ${ORG_HOME}/admin/msp/signcerts/
+    mkdir -p ${ORG_HOME}/admin/msp/keystore/
 
-    echo "${KEYSTORE}" >> ${ORG_HOME}/admin/msp/keystore/server.key
-    echo "${SIGNCERTS}" >> ${ORG_HOME}/admin/msp/signcerts/server.crt
+    echo "${KEYSTORE}" >> ${ORG_HOME}/admin/msp/keystore/keysk
+    echo "${SIGNCERTS}" >> ${ORG_HOME}/admin/msp/signcerts/cert.pem
 
     LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/{{ .Values.vault.secrettls_orderer }} | jq -r 'if .errors then . else . end')
     validateVaultResponse "{{ .Values.vault.secrettls_orderer }}" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
@@ -245,7 +249,8 @@ data:
 
     echo "${KEYSTORE}" >> ${ORG_HOME}/admin/tls/keystore/client.key
     echo "${SIGNCERTS}" >> ${ORG_HOME}/admin/tls/signcerts/client.crt
-    echo "${TLSCACERTS}" >> ${ORG_HOME}/admin/tls/signcerts/ca.crt
+    echo "${TLSCACERTS}" >> ${ORG_HOME}/admin/tls/tlscacerts/ca.crt
+    echo "${TLSCACERTS}" >> ${ORG_HOME}/admin/msp/tlscacerts/ca.crt
 
     mkdir -p ${ORG_CYPTO_FOLDER}/msp/admincerts
     cp ${ORG_HOME}/admin/msp/signcerts/* ${ORG_CYPTO_FOLDER}/msp/admincerts/${ORG_ADMIN_USER}-cert.pem
