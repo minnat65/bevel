@@ -21,7 +21,7 @@ metadata:
 spec:
   storageClassName: {{ $.Values.storage.storageclassname }}
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: {{ $.Values.storage.storagesize }}
@@ -43,7 +43,7 @@ metadata:
 spec:
   storageClassName: {{ $.Values.storage.storageclassname }}
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: {{ $.Values.storage.storagesize }}
