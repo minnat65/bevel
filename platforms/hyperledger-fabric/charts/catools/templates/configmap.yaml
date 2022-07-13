@@ -234,9 +234,12 @@ data:
     mkdir -p ${ORG_HOME}/admin/msp/signcerts/
     mkdir -p ${ORG_HOME}/admin/msp/keystore/
     mkdir -p ${ORG_HOME}/admin/msp/tlscacerts/
+    mkdir -p ${ORG_HOME}/admin/msp/cacerts/
 
     echo "${KEYSTORE}" >> ${ORG_HOME}/admin/msp/keystore/keysk
     echo "${SIGNCERTS}" >> ${ORG_HOME}/admin/msp/signcerts/cert.pem
+    echo "${TLSCACERTS}" >> ${ORG_HOME}/admin/msp/keystore/keysk
+    echo "${CACERTS}" >> ${ORG_HOME}/admin/msp/cacerts/cacerts.pem
 
     LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/{{ .Values.vault.secrettls_orderer }} | jq -r 'if .errors then . else . end')
     validateVaultResponse "{{ .Values.vault.secrettls_orderer }}" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
@@ -297,7 +300,7 @@ data:
     cp ${ORG_HOME}/admin/tls/tlscacerts/* ${ORG_CYPTO_FOLDER}/users/${ORG_ADMIN_USER}/tls/ca.crt
 
     ## Register and enroll peers and populate their MSP folder
-    COUNTER=`expr ${NO_OF_PEERS} - ${NO_OF_NEW_PEERS}`
+    COUNTER=0
     while [  ${COUNTER} -lt ${NO_OF_PEERS} ]; do
       PEER="peer${COUNTER}.${FULLY_QUALIFIED_ORG_NAME}"
       CSR_HOSTS=${PEER}
