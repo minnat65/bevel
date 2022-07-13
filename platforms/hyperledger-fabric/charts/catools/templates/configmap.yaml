@@ -193,6 +193,9 @@ data:
     fi
     mkdir ${ORG_CYPTO_FOLDER}/msp/tlscacerts
     cp ${ORG_CYPTO_FOLDER}/msp/cacerts/* ${ORG_CYPTO_FOLDER}/msp/tlscacerts
+    
+    mkdir -p ${ORG_HOME}/admin/msp/cacerts/
+    cp ${ORG_CYPTO_FOLDER}/msp/cacerts/* ${ORG_HOME}/admin/msp/cacerts/
 
     validateVaultResponse () {
       if echo ${2} | grep "errors" || [ "${2}" = "" ]; then
@@ -230,8 +233,7 @@ data:
 
     mkdir -p ${ORG_HOME}/admin/msp/signcerts/
     mkdir -p ${ORG_HOME}/admin/msp/keystore/
-    mkdir -p ${ORG_HOME}/admin/msp/signcerts/
-    mkdir -p ${ORG_HOME}/admin/msp/keystore/
+    mkdir -p ${ORG_HOME}/admin/msp/tlscacerts/
 
     echo "${KEYSTORE}" >> ${ORG_HOME}/admin/msp/keystore/keysk
     echo "${SIGNCERTS}" >> ${ORG_HOME}/admin/msp/signcerts/cert.pem
@@ -257,6 +259,9 @@ data:
 
     mkdir -p ${ORG_HOME}/admin/msp/admincerts
     cp ${ORG_HOME}/admin/msp/signcerts/* ${ORG_HOME}/admin/msp/admincerts/${ORG_ADMIN_USER}-cert.pem
+
+    mkdir -p ${ORG_HOME}/admin/msp/cacerts
+    cp ${ORG_HOME}/admin/msp/tlscacerts/* ${ORG_HOME}/admin/msp/cacerts/${ORG_ADMIN_USER}-cert.pem
 
     mkdir -p ${ORG_CYPTO_FOLDER}/users/${ORG_ADMIN_USER}
     cp -R ${ORG_HOME}/admin/msp ${ORG_CYPTO_FOLDER}/users/${ORG_ADMIN_USER}
