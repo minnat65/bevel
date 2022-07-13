@@ -238,7 +238,6 @@ data:
 
     echo "${KEYSTORE}" >> ${ORG_HOME}/admin/msp/keystore/key_sk
     echo "${SIGNCERTS}" >> ${ORG_HOME}/admin/msp/signcerts/cert.pem
-    echo "${TLSCACERTS}" >> ${ORG_HOME}/admin/msp/keystore/keysk
     echo "${CACERTS}" >> ${ORG_HOME}/admin/msp/cacerts/cacerts.pem
 
     LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/{{ .Values.vault.secrettls_orderer }} | jq -r 'if .errors then . else . end')
@@ -259,6 +258,9 @@ data:
 
     mkdir -p ${ORG_CYPTO_FOLDER}/msp/admincerts
     cp ${ORG_HOME}/admin/msp/signcerts/* ${ORG_CYPTO_FOLDER}/msp/admincerts/${ORG_ADMIN_USER}-cert.pem
+
+    mkdir -p ${ORG_CYPTO_FOLDER}/msp/keystore
+    cp ${ORG_HOME}/admin/msp/keystore/* ${ORG_CYPTO_FOLDER}/msp/keystore/key_sk
 
     mkdir -p ${ORG_HOME}/admin/msp/admincerts
     cp ${ORG_HOME}/admin/msp/signcerts/* ${ORG_HOME}/admin/msp/admincerts/${ORG_ADMIN_USER}-cert.pem
