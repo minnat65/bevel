@@ -523,7 +523,7 @@ data:
     cp ${ORG_HOME}/admin/tls/tlscacerts/* ${ORG_CYPTO_FOLDER}/users/${ORG_ADMIN_USER}/tls/ca.crt
 
     ## Register and enroll peers and populate their MSP folder
-    COUNTER=`expr ${NO_OF_PEERS} - ${NO_OF_NEW_PEERS}`
+    COUNTER=0
     while [  ${COUNTER} -lt ${NO_OF_PEERS} ]; do
       PEER="peer${COUNTER}.${FULLY_QUALIFIED_ORG_NAME}"
       CSR_HOSTS=${PEER}
