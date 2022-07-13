@@ -232,7 +232,7 @@ data:
     echo "${KEYSTORE}" >> ${ORG_HOME}/admin/msp/keystore/server.key
     echo "${SIGNCERTS}" >> ${ORG_HOME}/admin/msp/signcerts/server.crt
 
-    LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_CLIENT_TOKEN}" ${VAULT_ADDR}/v1/{{ .Values.vault.secrettls_orderer }} | jq -r 'if .errors then . else . end')
+    LOOKUP_SECRET_RESPONSE=$(curl -sS --header "X-Vault-Token: ${VAULT_TOKEN}" ${VAULT_ADDR}/v1/{{ .Values.vault.secrettls_orderer }} | jq -r 'if .errors then . else . end')
     validateVaultResponse "secret ({{ .Values.vault.secrettls_orderer }})" "${LOOKUP_SECRET_RESPONSE}" "LOOKUPSECRETRESPONSE"
 
     KEYSTORE=$(echo ${LOOKUP_SECRET_RESPONSE} | jq -r '.data.data["client.key"]')
@@ -327,7 +327,7 @@ data:
       
       let COUNTER=COUNTER+1
     done
-
+    echo "Done"
     cd ${CURRENT_DIR}
 
   generate-crypto-peer.sh: |-
