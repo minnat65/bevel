@@ -424,6 +424,8 @@ spec:
             value: "{{ $.Values.checks.refresh_cert_value }}"
           - name: ADD_PEER
             value: "{{ $.Values.checks.add_peer_value }}"
+          - name: MIXED_ORG
+            value: "{{ $.Values.metadata.mixed_org }}"
           - name: ORDERERS_NAMES
             value: "{{ $.Values.orderers.name }}"
           - name: PEERS_NAMES
@@ -501,8 +503,13 @@ spec:
                     # Generate crypto material for organization peers
                     cd /root/ca-tools/${NAME}
                     if [ "$ADD_PEER" = "false" ]; then
-                      ./create-peer-crypto.sh    
-                      break
+                      if [ "$MIXED_ORG" = "true"]; then
+                        ./create-peer-crypto.sh
+                        break
+                      else
+                        ./generate-crypto-peer.sh
+                        break
+                      fi;
                     else
                       ./generate-crypto-add-peer.sh  
                       break
