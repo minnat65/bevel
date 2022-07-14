@@ -504,10 +504,12 @@ spec:
                     cd /root/ca-tools/${NAME}
                     if [ "$ADD_PEER" = "false" ]; then
                       if [ "$MIXED_ORG" = "true"]; then
-                        ./create-peer-crypto.sh
+                        echo "mixed org running.."
+                        #./create-peer-crypto.sh
                         break
                       else
-                        ./generate-crypto-peer.sh
+                        echo "only peer org running.."
+                        #./generate-crypto-peer.sh
                         break
                       fi;
                     else
