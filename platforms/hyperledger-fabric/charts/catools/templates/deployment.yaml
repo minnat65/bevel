@@ -505,16 +505,15 @@ spec:
                     if [ "$ADD_PEER" = "false" ]; then
                       if [ $MIXED_ORG ]; then
                         echo "mixed org running.."
-                        #./create-peer-crypto.sh
+                        ./create-peer-crypto.sh
                         break
                       else
                         echo "only peer org running.."
-                        #./generate-crypto-peer.sh
+                        ./generate-crypto-peer.sh
                         break
                       fi;
                     else
                       ./generate-crypto-add-peer.sh  
-                      break
                     fi;
                   fi;
                 done 
