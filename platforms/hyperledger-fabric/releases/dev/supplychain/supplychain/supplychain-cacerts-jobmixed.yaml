@@ -1,0 +1,35 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: supplychain-cacerts-job
+  namespace: supplychain-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: supplychain-cacerts-job
+  chart:
+    git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
+    ref: workspace
+    path: platforms/hyperledger-fabric/charts/generate_cacerts
+  values:
+    metadata:
+      name: supplychain
+      component_name: supplychain-net
+      namespace: supplychain-net    
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.2
+        alpineutils: adopblockchaincloud0502.azurecr.io/alpine-utils:1.0
+
+    vault:
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: demo-fabricsupplychain-net-auth
+      secretcryptoprefix: secretsv2/data/crypto/mixedOrganizations/supplychain-net/ca
+      secretorderercryptoprefix: secretsv2/data/crypto/ordererOrganizations/supplychain-net/ca
+      secretpeercryptoprefix: secretsv2/data/crypto/peerOrganizations/supplychain-net/ca
+      secretcredentialsprefix: secretsv2/data/credentials/supplychain-net/ca/supplychain
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      
+    ca:
+      subject: /C=GB/ST=London/L=London/O=Orderer/CN=ca.supplychain-net.hf.demo.aws.blockchaincloudpoc.com
