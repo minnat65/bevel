@@ -151,7 +151,6 @@ spec:
           #!/usr/bin/env sh
           echo "Joining Channel ${CHANNEL_NAME}"
           tls_status=${CORE_PEER_TLS_ENABLED}
-          tail -f /dev/null
           if [ "$tls_status" = "true" ]
           then
             peer channel fetch 0 ${CHANNEL_NAME}.block -o ${ORDERER_URL} -c ${CHANNEL_NAME} --tls --cafile ${ORDERER_CA}
