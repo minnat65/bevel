@@ -503,7 +503,7 @@ spec:
                     # Generate crypto material for organization peers
                     cd /root/ca-tools/${NAME}
                     if [ "$ADD_PEER" = "false" ]; then
-                      if $MIXED_ORG; then
+                      if [ "$MIXED_ORG" != "false" ]; then
                         echo "mixed org running..>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
                         ./create-peer-crypto.sh
                         break
