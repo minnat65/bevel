@@ -1,0 +1,35 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: manufacturer-cacerts-job
+  namespace: manufacturer-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: manufacturer-cacerts-job
+  chart:
+    git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
+    ref: workspace
+    path: platforms/hyperledger-fabric/charts/generate_cacerts
+  values:
+    metadata:
+      name: manufacturer
+      component_name: manufacturer-net
+      namespace: manufacturer-net    
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.2
+        alpineutils: adopblockchaincloud0502.azurecr.io/alpine-utils:1.0
+
+    vault:
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: demo-fabricmanufacturer-net-auth
+      secretcryptoprefix: secretsv2/data/crypto/peerOrganizations/manufacturer-net/ca
+      secretorderercryptoprefix: secretsv2/data/crypto/ordererOrganizations/manufacturer-net/ca
+      secretpeercryptoprefix: secretsv2/data/crypto/peerOrganizations/manufacturer-net/ca
+      secretcredentialsprefix: secretsv2/data/credentials/manufacturer-net/ca/manufacturer
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      
+    ca:
+      subject: /C=CH/ST=Zurich/L=Zurich/O=Manufacturer/CN=ca.manufacturer-net.hf.demo.aws.blockchaincloudpoc.com
