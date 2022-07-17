@@ -425,7 +425,7 @@ spec:
           - name: ADD_PEER
             value: "{{ $.Values.checks.add_peer_value }}"
           - name: MIXED_ORG
-            value: {{ $.Values.metadata.mixed_org }}
+            value: "{{ $.Values.metadata.mixed_org }}"
           - name: ORDERERS_NAMES
             value: "{{ $.Values.orderers.name }}"
           - name: PEERS_NAMES
