@@ -86,7 +86,7 @@
     #   loop: "{{ network['organizations'] }}"
     #   when: item.org_status == 'new'
 
-    #Creating a pause so that the client certificates are valid
+    # Creating a pause so that the client certificates are valid
     # You can continue if the CA-server pods are running for more than 5 minutes
     - pause:
         prompt: "Sleeping... so that the client certificates are valid"
