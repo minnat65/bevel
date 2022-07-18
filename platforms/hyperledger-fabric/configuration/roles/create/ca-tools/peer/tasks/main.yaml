@@ -161,7 +161,7 @@
     peer_count: "{{ item.services.peers | length }}"
     add_peer_value: "{{ add_peer | default(false) | quote }}"
     new_peer_count: "{{ new_peer_list | length }}"
-    mixed_org: "{{ mixedOrg | default('false') }}"
+    mixed_org: "{{ mixedOrg | default(false) | quote }}"
 
 #Git Push : Pushes the above generated files to git directory 
 - name: Git Push

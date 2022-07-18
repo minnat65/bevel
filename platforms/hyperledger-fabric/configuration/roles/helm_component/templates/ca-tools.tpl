@@ -21,7 +21,7 @@ spec:
       name: {{ component_type }}-ca-tools
       component_type: {{ component_type }}
       org_name: {{ org_name }}
-      mixed_org: {{ mixed_org | default('false') }}
+      mixed_org: {{ mixed_org | default(false) }}
       proxy: {{ proxy }}
 {% if network.env.annotations is defined %}
     annotations:  
