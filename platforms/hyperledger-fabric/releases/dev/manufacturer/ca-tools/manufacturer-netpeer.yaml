@@ -1,0 +1,82 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: manufacturer-net-peer-ca-tools
+  namespace: manufacturer-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: manufacturer-net-peer-ca-tools
+  chart:
+    git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
+    ref: workspace
+    path: platforms/hyperledger-fabric/charts/catools
+  values:
+    metadata:
+      namespace: manufacturer-net
+      name: peer-ca-tools
+      component_type: peer
+      org_name: manufacturer
+      mixed_org: False
+      proxy: haproxy
+    replicaCount: 1
+
+    image:
+      repository: hyperledger/fabric-ca-tools
+      tag: 1.2.1
+      pullPolicy: IfNotPresent
+      alpineutils: adopblockchaincloud0502.azurecr.io/alpine-utils:1.0
+      
+    storage:
+      storageclassname: manufacturersc
+      storagesize: 512Mi
+    
+    vault:
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: demo-fabricmanufacturer-net-auth
+      secretmsp: secretsv2/data/crypto/peerOrganizations/manufacturer-net/users/admin/msp
+      secrettls: secretsv2/data/crypto/peerOrganizations/manufacturer-net/users/admin/tls
+      secretmsp_orderer: secretsv2/data/crypto/ordererOrganizations/manufacturer-net/users/admin/msp
+      secrettls_orderer: secretsv2/data/crypto/ordererOrganizations/manufacturer-net/users/admin/tls
+      secretorderer: secretsv2/data/crypto/peerOrganizations/manufacturer-net/orderers
+      secretpeer: secretsv2/data/crypto/peerOrganizations/manufacturer-net/peers
+      secretpeerorderertls: secretsv2/data/crypto/peerOrganizations/manufacturer-net/orderer/tls
+      secretambassador: secretsv2/data/crypto/peerOrganizations/manufacturer-net/ambassador
+      secretcert: secretsv2/data/crypto/peerOrganizations/manufacturer-net/ca?ca.manufacturer-net-cert.pem
+      secretkey: secretsv2/data/crypto/peerOrganizations/manufacturer-net/ca?manufacturer-net-CA.key
+      secretcouchdb: secretsv2/data/credentials/manufacturer-net/couchdb/manufacturer
+      secretconfigfile: secretsv2/data/crypto/peerOrganizations/manufacturer-net/msp/config
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+    
+    healthcheck: 
+      retries: 10
+      sleepTimeAfterError: 2
+
+    
+    org_data:
+      external_url_suffix: hf.demo.aws.blockchaincloudpoc.com
+      component_subject: O=Manufacturer,OU=Manufacturer,L=47.38/8.54/Zurich,C=CH
+      cert_subject: O=Manufacturer/OU=Manufacturer/L=47.38,8.54,Zurich/C=CH
+      component_country: CH
+      component_state: Zurich
+      component_location: Zurich
+      ca_url: ca.manufacturer-net.hf.demo.aws.blockchaincloudpoc.com:8443
+
+    orderers:
+      name: orderer1-orderer2-orderer3-
+    orderers_info:
+      - name: orderer1
+        path: "certs/orderer1-ca.crt"
+      - name: orderer2
+        path: "certs/orderer2-ca.crt"
+      - name: orderer3
+        path: "certs/orderer3-ca.crt"
+
+    peers:
+      name: peer0,-      
+    peer_count: "1"
+    checks:
+      refresh_cert_value: False
+      add_peer_value: False
