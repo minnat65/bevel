@@ -1,10 +1,10 @@
   - &{{ component_name }}Org
     Name: {{ component_name }}MSP
     ID: {{ component_name }}MSP
-{% if component_type == 'mixed' %}
+{% if item.services.orderers is defined and item.services.orderers | length > 0 %}
     MSPDir: ./crypto-config/ordererOrganizations/{{ component_ns }}/msp
 {% else %}
-    MSPDir: ./crypto-config/{{ component_type }}Organizations/{{ component_ns }}/msp
+    MSPDir: ./crypto-config/peerOrganizations/{{ component_ns }}/msp
 {% endif %}
     Policies:
       Readers:
