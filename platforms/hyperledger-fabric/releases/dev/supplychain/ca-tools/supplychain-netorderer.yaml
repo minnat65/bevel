@@ -65,4 +65,4 @@ spec:
       ca_url: ca.supplychain-net.hf.demo.aws.blockchaincloudpoc.com:8443
 
     orderers:
-      name: orderer1-orderer2-orderer3-
+      name: orderer1-orderer2-orderer3-orderer4-
