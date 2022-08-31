@@ -1,0 +1,52 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: carrier-generate-ambassador-certs-job
+  namespace: carrier-quo
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  releaseName: carrier-generate-ambassador-certs-job
+  chart:
+    git: git@github.com:suvajit-sarkar/blockchain-automation-framework.git
+    ref: develop
+    path: platforms/quorum/charts/certs-ambassador-quorum
+  values:
+    name: "carrier"
+    metadata:
+      name: carrier-generate-ambassador-certs-job
+      namespace: carrier-quo
+      external_url: carrier-generate-ambassador-certs-job.quo.demo.aws.blockchaincloudpoc.com
+    image:
+      initContainerName: ghcr.io/hyperledger/alpine-utils:1.0
+      node: quorumengineering/quorum:21.4.2
+      pullPolicy: Always
+      certsContainerName: ghcr.io/hyperledger/bevel-build:jdk8-latest
+      imagePullSecret: regcred
+      pullPolicy: Always
+    vault:
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      role: vault-role
+      authpath: quorumcarrier
+      serviceaccountname: vault-auth
+      certsecretprefix: secretsv2/data/carrier-quo
+      retries: 30
+    subjects:
+      root_subject: "CN=DLT Root CA,OU=DLT,O=DLT,L=London,C=GB"
+      cert_subject: "CN=DLT Root CA/OU=DLT/O=DLT/L=London/C=GB"
+    opensslVars:
+      domain_name: "carrier.quo.demo.aws.blockchaincloudpoc.com"
+      domain_name_api: "carrierapi.quo.demo.aws.blockchaincloudpoc.com"
+      domain_name_web: "carrierweb.quo.demo.aws.blockchaincloudpoc.com"
+      domain_name_tessera: "carrier-tessera.carrier-quo"
+    metadata:
+      name: carrier-generate-ambassador-certs-job
+      namespace: carrier-quo
+      external_url: carrier-generate-ambassador-certs-job.quo.demo.aws.blockchaincloudpoc.com
+    acceptLicense: YES
+    healthCheckNodePort: 0
+    sleepTimeAfterError: 60
+    sleepTime: 10
+    healthcheck:
+      readinesscheckinterval: 10
+      readinessthreshold: 1
