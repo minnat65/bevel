@@ -1,0 +1,57 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: chaincode-install-carrier-peer0-1
+  namespace: carrier-net
+  annotations:
+    fluxcd.io/automated: "false"
+spec:
+  interval: 1m
+  releaseName: chaincode-install-carrier-peer0-1
+  chart:
+    spec:
+      interval: 1m
+      sourceRef:
+        kind: GitRepository
+        name: flux-demo-fabric
+        namespace: flux-demo-fabric
+      chart: platforms/hyperledger-fabric/charts/install_chaincode
+  values:
+    metadata:
+      namespace: carrier-net
+      network:
+        version: 2.2.2
+      images:
+        fabrictools: hyperledger/fabric-tools:2.2.2
+        alpineutils: adopblockchaincloud0502.azurecr.io/alpine-utils:1.0
+    peer:
+      name: peer0
+      address: peer0.carrier-net:7051
+      localmspid: carrierMSP
+      loglevel: debug
+      tlsstatus: true
+    vault:
+      role: vault-role
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      authpath: demo-fabriccarrier-net-auth
+      adminsecretprefix: secretsv2/data/crypto/peerOrganizations/carrier-net/users/admin 
+      orderersecretprefix: secretsv2/data/crypto/peerOrganizations/carrier-net/orderer
+      secretgitprivatekey: secretsv2/data/credentials/carrier-net/git
+      serviceaccountname: vault-auth
+      imagesecretname: regcred
+      tls: false
+    orderer:
+      address: orderer3.hf.demo.aws.blockchaincloudpoc.com:8443
+    chaincode:
+      builder: hyperledger/fabric-ccenv:2.2.2
+      name: supplychain
+      version: 1
+      lang: golang
+      maindirectory: cmd
+      repository:
+        hostname: "github.com"
+        git_username: "suvajit-sarkar"
+        url: github.com/suvajit-sarkar/bevel.git
+        branch: workspace
+        path: examples/supplychain-app/fabric/chaincode_rest_server/chaincode/
+      endorsementpolicies:  ''
