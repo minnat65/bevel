@@ -1,0 +1,33 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: university-university-trustee
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: university-ns
+spec:
+  releaseName: university-university-trustee
+  chart:
+    path: platforms/hyperledger-indy/charts/indy-key-mgmt
+    git: ssh://git@github.com/suvajit-sarkar/bevel.git
+    ref: develop
+  values:
+    metadata:
+      name: university-university-trustee
+      namespace: university-ns
+    network:
+      name: baf
+    image:
+      name: university
+      repository: adopblockchaincloud0502.azurecr.io/indy-key-mgmt:1.12.1
+      pullSecret: regcred
+    vault:
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      version: "2"
+      keyPath: university.trustees
+      identity: university-trustee
+      auth_path: kubernetes-university-admin-auth
+      certsecretprefix: university
+    account:
+      service: university-admin-vault-auth
+      role: rw
