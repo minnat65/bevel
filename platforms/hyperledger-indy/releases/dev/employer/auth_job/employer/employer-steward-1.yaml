@@ -1,0 +1,35 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: employer-employer-steward-1-auth-job
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: employer-ns
+spec:
+  releaseName: employer-employer-steward-1-auth-job
+  chart:
+    path: platforms/hyperledger-indy/charts/indy-auth-job
+    git: ssh://git@github.com/suvajit-sarkar/bevel.git
+    ref: develop
+  values:
+    metadata:
+      name: employer-employer-steward-1-auth-job
+      namespace: employer-ns
+    network:
+      name: baf
+      kubernetes_url: https://34D2F36E71F0880BE63D943D2E503A9B.gr7.eu-west-1.eks.amazonaws.com
+    image:
+      name: employer
+      repository: alpine:3.9.4
+    vault:
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      identity: employer-steward-1
+      admin_auth_path: kubernetes-employer-admin-auth
+      policy: employer-employer-steward-1-ro
+      policy_content: path \"/employer/data/stewards/employer-steward-1/*\" { capabilities = [ \"read\", \"list\" ] }
+      auth_path: kubernetes-employer-employer-steward-1-auth
+    account:
+      admin_service: employer-admin-vault-auth
+      admin_role: rw
+      service: employer-employer-steward-1-vault-auth
+      role: ro
