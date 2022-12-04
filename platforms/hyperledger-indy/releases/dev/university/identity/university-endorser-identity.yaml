@@ -1,0 +1,43 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: university-university-endorser-transaction
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: university-ns
+spec:
+  releaseName: university-university-endorser-transaction
+  chart:
+    path: platforms/hyperledger-indy/charts/indy-ledger-txn
+    git: ssh://git@github.com/suvajit-sarkar/bevel.git
+    ref: develop
+  values:
+    metadata:
+      name: university-university-endorser-transaction
+      namespace: university-ns
+    network:
+      name: baf
+    image:
+      cli:
+        name: university
+        repository: adopblockchaincloud0502.azurecr.io/indy-ledger-txn:latest
+        pullSecret: regcred
+    vault:
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      role: rw
+      serviceAccountName: university-admin-vault-auth
+      auth_path: kubernetes-university-admin-auth
+    organization:
+      name: university
+      adminIdentity:
+        name: authority-trustee
+        did: Uah9WLyq6htXhJLBAJc7iw
+        path: authority/data/trustees
+      newIdentity:
+        name: university-endorser
+        role: ENDORSER
+        did: BJvsNGpiHDYEp2mvfY5K6a
+        verkey: 6cti1RctJJeR17b9jeHbWKgqwLPTeHJudY6wGhETVgDV
+        path: university/data/endorsers
+    node:
+      name: university
