@@ -1,0 +1,35 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: authority-bevel-ac-auth-job
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: authority-ns
+spec:
+  releaseName: authority-bevel-ac-auth-job
+  chart:
+    path: platforms/hyperledger-indy/charts/indy-auth-job
+    git: ssh://git@github.com/suvajit-sarkar/bevel.git
+    ref: develop
+  values:
+    metadata:
+      name: authority-bevel-ac-auth-job
+      namespace: authority-ns
+    network:
+      name: baf
+      kubernetes_url: https://34D2F36E71F0880BE63D943D2E503A9B.gr7.eu-west-1.eks.amazonaws.com
+    image:
+      name: authority
+      repository: alpine:3.9.4
+    vault:
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      identity: bevel-ac
+      admin_auth_path: kubernetes-authority-admin-auth
+      policy: authority-bevel-ac-ro
+      policy_content: path \"/authority/data/+/+/+/public*\" { capabilities = [ \"read\", \"list\" ] }
+      auth_path: kubernetes-authority-bevel-ac-auth
+    account:
+      admin_service: authority-admin-vault-auth
+      admin_role: rw
+      service: authority-bevel-ac-vault-auth
+      role: ro
