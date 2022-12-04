@@ -1,0 +1,49 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: university-endorser
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: university-ns
+spec:
+  releaseName: university-endorser-faber
+  chart:
+    path: examples/identity-app/charts/faber
+    git: ssh://git@github.com/suvajit-sarkar/bevel.git
+    ref: develop
+  values:
+    metadata:
+      namespace: university-ns
+      name: university-endorser
+    organization:
+      name: university
+    image:
+      pullSecret: regcred
+      init:
+        name: certs-init
+        repository: alpine:3.9.4
+      agent:
+        name: university-endorser
+        repository: adopblockchaincloud0502.azurecr.io/aries-agents:1.12.1
+    service:
+      ports: 
+        service: 15023
+        endpoint: 15024
+        webhook: 15025
+      
+      address: university-endorser.id.demo.aws.blockchaincloudpoc.com
+      
+      ledger: http://authority-webserver.id.demo.aws.blockchaincloudpoc.com:15010
+      genesis: http://authority-webserver.id.demo.aws.blockchaincloudpoc.com:15010/genesis
+    vault:
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      serviceAccountName: university-university-endorser-vault-auth
+      authPath: kubernetes-university-university-endorser-auth
+      endorserName: university-endorser
+      role: ro
+    storage:
+      size: 128Mi
+      className: university-aws-storageclass
+    proxy:
+      
+      provider: "ambassador"
