@@ -1,0 +1,49 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: employer-endorser-acme
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: employer-ns
+spec:
+  releaseName: employer-endorser-acme
+  chart:
+    path: examples/identity-app/charts/acme
+    git: ssh://git@github.com/suvajit-sarkar/bevel.git
+    ref: develop
+  values:
+    metadata:
+      namespace: employer-ns
+      name: employer-endorser
+    organization:
+      name: employer
+    image:
+      pullSecret: regcred
+      init:
+        name: certs-init
+        repository: alpine:3.9.4
+      agent:
+        name: employer-endorser
+        repository: adopblockchaincloud0502.azurecr.io/aries-agents:1.12.1
+    service:
+      ports: 
+        service: 15033
+        endpoint: 15034
+        webhook: 15035
+      
+      address: employer-endorser.id.demo.aws.blockchaincloudpoc.com
+      
+      ledger: http://authority-webserver.id.demo.aws.blockchaincloudpoc.com:15010
+      genesis: http://authority-webserver.id.demo.aws.blockchaincloudpoc.com:15010/genesis
+    vault:
+      address: http://vault.internal.demo.aws.blockchaincloudpoc.com:9001
+      serviceAccountName: employer-employer-endorser-vault-auth
+      authPath: kubernetes-employer-employer-endorser-auth
+      endorserName: employer-endorser
+      role: ro
+    storage:
+      size: 128Mi
+      className: employer-aws-storageclass
+    proxy:
+      
+      provider: "ambassador"
