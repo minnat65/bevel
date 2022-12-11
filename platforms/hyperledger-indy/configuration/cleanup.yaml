@@ -8,7 +8,7 @@
 # Playbook to cleanup platform from the cluster
 # Playbook arguments: complete network.yaml
 #########################
-- hosts: ansible_provisioners
+- hosts: localhost
   gather_facts: no
   no_log: "{{ no_ansible_log | default(false) }}"
   tasks:
