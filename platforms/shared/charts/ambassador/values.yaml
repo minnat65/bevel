@@ -18,7 +18,7 @@ ambassador:
     ports: # Use this when specific ports are needed
     portRange:              # For a range of ports # use this when a range of ports are needed
       from: 15010
-      to: 15046
+      to: 15045
 
 replicaCount: 3
 daemonSet: false
