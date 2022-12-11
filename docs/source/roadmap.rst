@@ -10,8 +10,8 @@ Bevel current roadmap
     Platforms and components upgrade : active, 22-09-01, 180d
     section Application
     Besu Ref App: active, 22-10-15, 90d
-    section Bevel Operator
-    To Be Discussed: active, 22-11-15, 120d
+    section Bevel v1.0
+    To Be Discussed: active, 22-11-15, 180d
 
 .. |pin| image:: https://github.githubassets.com/images/icons/emoji/unicode/1f4cc.png?v8
     :width: 15pt
@@ -63,7 +63,7 @@ Platforms
 ---------
 - |run| Reduce/decouple ansible dependecy in DLT platforms automation
 - |run| Option to enable cert-manager for tls certificate creation
-- |run| Corda Enterprise operational feature enhancements
+- |pin| Corda Enterprise operational feature enhancements
     - |pin| HA Notary options
     - |pin| Enable PostGreSQL support for Corda Enterprise
     - |pin| Removal of node
@@ -73,7 +73,7 @@ Platforms
     - |hand| Feature mixed organizations (orderer and peer in same organizations)
 - |run| HL Besu operational feature enhancements
     - |run| Implement private transactions
-    - |pin| Add QBFT consensus
+    - |run| Add QBFT consensus
     - |hand| Enable node discovery
     - |hand| Enable bootnodes
 - |run| Quorum operational feature enhancements
@@ -86,6 +86,13 @@ Application
 -----------
 -  |run| Hyperledger Besu reference application
 
+Bevel v1.0
+-----------
+-  |pin| Code repo structure change
+-  |pin| Helm chart refactoring
+-  |pin| Use of kubernetes operators
+-  |pin| Documentations redesign
+-  |hand| Bevel cli
 
 Histroic DLT/Blockchain support releases
 -----------------------------------------
