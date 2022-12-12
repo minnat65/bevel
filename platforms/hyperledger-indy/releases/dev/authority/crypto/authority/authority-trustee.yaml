@@ -1,0 +1,33 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: authority-authority-trustee
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: authority-ns
+spec:
+  releaseName: authority-authority-trustee
+  chart:
+    path: platforms/hyperledger-indy/charts/indy-key-mgmt
+    git: https://github.com/suvajit-sarkar/bevel.git
+    ref: develop
+  values:
+    metadata:
+      name: authority-authority-trustee
+      namespace: authority-ns
+    network:
+      name: baf
+    image:
+      name: authority
+      repository: index.docker.io/hyperledgerlabs/indy-key-mgmt:1.12.1
+      pullSecret: regcred
+    vault:
+      address: http://a847f8df9028943a39845717f1dae0aa-991936310.ap-south-1.elb.amazonaws.com:8080
+      version: "2"
+      keyPath: authority.trustees
+      identity: authority-trustee
+      auth_path: kubernetes-authority-admin-auth
+      certsecretprefix: authority
+    account:
+      service: authority-admin-vault-auth
+      role: rw
