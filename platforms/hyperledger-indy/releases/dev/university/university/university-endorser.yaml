@@ -24,7 +24,7 @@ spec:
         repository: alpine:3.9.4
       agent:
         name: university-endorser
-        repository: index.docker.io/truscholar2020/aries-agents:1.12.1
+        repository: index.docker.io/kbhokray/aries-agents:1.11.0
     service:
       ports: 
         service: 15015
