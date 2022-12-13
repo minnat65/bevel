@@ -18,7 +18,7 @@ from runners.support.utils import (
     log_timer,
     prompt,
     prompt_loop,
-    require_indy,
+    check_requires,
 )
 
 CRED_PREVIEW_TYPE = (
@@ -446,7 +446,7 @@ if __name__ == "__main__":
         except ImportError:
             print("pydevd_pycharm library was not found")
 
-    require_indy()
+    check_requires({"wallet_type":"indy"})
 
     try:
         asyncio.get_event_loop().run_until_complete(
