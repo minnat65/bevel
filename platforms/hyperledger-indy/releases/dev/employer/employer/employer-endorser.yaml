@@ -24,7 +24,7 @@ spec:
         repository: alpine:3.9.4
       agent:
         name: employer-endorser
-        repository: index.docker.io/truscholar2020/aries-agents:test
+        repository: index.docker.io/truscholar2020/aries-agents:test2
     service:
       ports: 
         service: 15022
