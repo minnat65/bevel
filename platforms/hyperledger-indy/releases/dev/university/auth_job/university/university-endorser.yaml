@@ -1,0 +1,35 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: university-university-endorser-auth-job
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: university-ns
+spec:
+  releaseName: university-university-endorser-auth-job
+  chart:
+    path: platforms/hyperledger-indy/charts/indy-auth-job
+    git: https://github.com/suvajit-sarkar/bevel.git
+    ref: develop
+  values:
+    metadata:
+      name: university-university-endorser-auth-job
+      namespace: university-ns
+    network:
+      name: baf
+      kubernetes_url: https://CD6C32CA31DDEE0453A01D18520C2B04.gr7.ap-south-1.eks.amazonaws.com
+    image:
+      name: university
+      repository: alpine:3.9.4
+    vault:
+      address: http://a847f8df9028943a39845717f1dae0aa-991936310.ap-south-1.elb.amazonaws.com:8080
+      identity: university-endorser
+      admin_auth_path: kubernetes-university-admin-auth
+      policy: university-university-endorser-ro
+      policy_content: path \"/university/data/endorsers/university-endorser/*\" { capabilities = [ \"read\", \"list\" ] }
+      auth_path: kubernetes-university-university-endorser-auth
+    account:
+      admin_service: university-admin-vault-auth
+      admin_role: rw
+      service: university-university-endorser-vault-auth
+      role: ro
