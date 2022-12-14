@@ -1,0 +1,33 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: employer-employer-steward-2
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: employer-ns
+spec:
+  releaseName: employer-employer-steward-2
+  chart:
+    path: platforms/hyperledger-indy/charts/indy-key-mgmt
+    git: https://github.com/suvajit-sarkar/bevel.git
+    ref: develop
+  values:
+    metadata:
+      name: employer-employer-steward-2
+      namespace: employer-ns
+    network:
+      name: baf
+    image:
+      name: employer
+      repository: index.docker.io/hyperledgerlabs/indy-key-mgmt:1.12.1
+      pullSecret: regcred
+    vault:
+      address: http://a7edbff88c07448e9962b5879cde9455-287388758.ap-south-1.elb.amazonaws.com:8080
+      version: "2"
+      keyPath: employer.stewards
+      identity: employer-steward-2
+      auth_path: kubernetes-employer-admin-auth
+      certsecretprefix: employer
+    account:
+      service: employer-admin-vault-auth
+      role: rw
