@@ -1,0 +1,35 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: university-university-trustee-auth-job
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: university-ns
+spec:
+  releaseName: university-university-trustee-auth-job
+  chart:
+    path: platforms/hyperledger-indy/charts/indy-auth-job
+    git: https://github.com/suvajit-sarkar/bevel.git
+    ref: develop
+  values:
+    metadata:
+      name: university-university-trustee-auth-job
+      namespace: university-ns
+    network:
+      name: baf
+      kubernetes_url: https://31BCAF92B713D50C9A976C62B5BC01A4.yl4.ap-south-1.eks.amazonaws.com
+    image:
+      name: university
+      repository: alpine:3.9.4
+    vault:
+      address: http://a7edbff88c07448e9962b5879cde9455-287388758.ap-south-1.elb.amazonaws.com:8080
+      identity: university-trustee
+      admin_auth_path: kubernetes-university-admin-auth
+      policy: university-university-trustee-ro
+      policy_content: path \"/university/data/trustees/university-trustee/*\" { capabilities = [ \"read\", \"list\" ] }
+      auth_path: kubernetes-university-university-trustee-auth
+    account:
+      admin_service: university-admin-vault-auth
+      admin_role: rw
+      service: university-university-trustee-vault-auth
+      role: ro
