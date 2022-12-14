@@ -1,0 +1,35 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: employer-employer-trustee-auth-job
+  annotations:
+    fluxcd.io/automated: "false"
+  namespace: employer-ns
+spec:
+  releaseName: employer-employer-trustee-auth-job
+  chart:
+    path: platforms/hyperledger-indy/charts/indy-auth-job
+    git: https://github.com/suvajit-sarkar/bevel.git
+    ref: develop
+  values:
+    metadata:
+      name: employer-employer-trustee-auth-job
+      namespace: employer-ns
+    network:
+      name: baf
+      kubernetes_url: https://31BCAF92B713D50C9A976C62B5BC01A4.yl4.ap-south-1.eks.amazonaws.com
+    image:
+      name: employer
+      repository: alpine:3.9.4
+    vault:
+      address: http://a7edbff88c07448e9962b5879cde9455-287388758.ap-south-1.elb.amazonaws.com:8080
+      identity: employer-trustee
+      admin_auth_path: kubernetes-employer-admin-auth
+      policy: employer-employer-trustee-ro
+      policy_content: path \"/employer/data/trustees/employer-trustee/*\" { capabilities = [ \"read\", \"list\" ] }
+      auth_path: kubernetes-employer-employer-trustee-auth
+    account:
+      admin_service: employer-admin-vault-auth
+      admin_role: rw
+      service: employer-employer-trustee-vault-auth
+      role: ro
